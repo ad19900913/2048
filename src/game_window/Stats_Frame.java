@@ -46,6 +46,8 @@ public class Stats_Frame extends JFrame{
 						Stats_Frame.this.setLocation(p2.getLocationOnScreen().x,
 								p2.getLocationOnScreen().y - 60);
 						repaint();
+						
+						p2.requestFocusInWindow();
 					}
 					Thread.sleep(20);
 				} catch (InterruptedException e) {

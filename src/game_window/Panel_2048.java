@@ -15,11 +15,12 @@ import util.Recorder;
 /*
  * 简单的2048游戏
  * 
- * 还需完善的功能有计分，计时，计步
+ * 已经完成的功能有计分，计时，计步
+ * 还需要完成算法优化，游戏获胜和失败的条件判断提示
  * 
  */
 public class Panel_2048 extends Game_Panel implements KeyListener{
-	boolean playing;//标志游戏是否开始
+	boolean playing,gameover,success;//标志游戏是否开始
 	public static ArrayList<Block> blocks;
 	private Robot robot=new Robot();//模拟自动运行
 	Date startDate;
@@ -49,8 +50,20 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 			}
 		}
 	}
+
 	public Panel_2048(){
-		
+		addKeyListener(this);
+	}
+	
+	public static void main(String[] args) {
+		new Panel_2048();
+	}
+	//游戏初始化工作在这里 
+	public void game_init(){
+		playing = true;//标志游戏开始
+		gameover=false;
+		success=false;
+		startDate=new Date();
 		sf=new Stats_Frame(this);
 		new Thread(sf.stats_Panel).start();
 		
@@ -65,38 +78,60 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 				blocks.add(block);
 			}
 		}
-	}
-	
-	public static void main(String[] args) {
-		new Panel_2048();
-	}
-	//游戏初始化工作在这里 
-	public void game_init(){
 		removeAll();
-		requestFocusInWindow();
-		addKeyListener(this);
+
+		
 		//robot.start();
 	}
+	
+	//判断游戏当前状态  是正在游戏  还是游戏失败  或者成功
+	public void judge_game_state(){
+		for (Block block : blocks) {
+			if(block.value==32){
+				success=true;
+				playing=false;
+				return;
+			}
+			if(block.value==0){
+				playing=true;
+				return;
+			}
+		}
+		playing=false;
+	}
+	
+	
 	@Override
 	public void paint(Graphics g) {
 		// TODO Auto-generated method stub
 		super.paint(g);
+		
 		if(playing){
-			//设置背景
 			g.setColor(new Color(187, 173, 160));
 			g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-			
+			judge_game_state();
 			//画出每个方块
 			for (Block block : blocks) {
 				block.draw(g);
 			}
 		}
+		
+		if(gameover){
+			g.setColor(Color.black);
+			g.setFont(new Font("微软雅黑", Font.BOLD, 40));
+			g.drawString("GAME OVER", 200, 200);
+		}
+		
+		if(success){
+			g.setColor(Color.black);
+			g.setFont(new Font("微软雅黑", Font.BOLD, 40));
+			g.drawString("YOU WIN", 200, 200);
+		}
+		
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(start)){
-			playing = true;//标志游戏开始
-			startDate=new Date();
 			game_init();
 			repaint();
 		}
@@ -115,6 +150,7 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 					   +"\r\n"
 					   +"游戏中按Q键退出游戏\r\n"
 					   +"按F键隐藏或显示计分条\r\n"
+					   +"按R键开启一局新游戏\r\n"
 					   +"W、A、S、D为控制键\r\n"
 					   );
 			jta.setSize(150, 250);
@@ -128,8 +164,38 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getKeyChar()=='w'){
+			Game_Control.direction="up";
+			next();
+		}
+		if(e.getKeyChar()=='s'){
+			Game_Control.direction="down";
+			next();
+		}
+		if(e.getKeyChar()=='a'){
+			Game_Control.direction="left";
+			next();
+		}
+		if(e.getKeyChar()=='d'){
+			Game_Control.direction="right";
+			next();
+		}
+		if(e.getKeyChar()=='f'){
+			//实现弹出统计窗口
+			if(sf.isVisible()){
+				sf.setVisible(false);
+			}else{
+				sf.setVisible(true);
+			}
+		}
+		if(e.getKeyChar()=='r'){
+			game_init();
+			Recorder.init();
+			repaint();
+		}
+		if(e.getKeyChar()=='q'){
+			System.exit(0);
+		}
 	}
 
 	@Override
@@ -148,32 +214,6 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode()==KeyEvent.VK_W){
-			Game_Control.direction="up";
-			next();
-		}
-		if(e.getKeyCode()==KeyEvent.VK_S){
-			Game_Control.direction="down";
-			next();
-		}
-		if(e.getKeyCode()==KeyEvent.VK_A){
-			Game_Control.direction="left";
-			next();
-		}
-		if(e.getKeyCode()==KeyEvent.VK_D){
-			Game_Control.direction="right";
-			next();
-		}
-		if(e.getKeyCode()==KeyEvent.VK_F){
-			//实现弹出统计窗口
-			if(sf.isVisible()){
-				sf.setVisible(false);
-			}else{
-				sf.setVisible(true);
-			}
-		}
-		if(e.getKeyCode()==KeyEvent.VK_Q){
-			System.exit(0);
-		}
+		
 	}
 }

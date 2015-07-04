@@ -1,4 +1,6 @@
 package util;
+import java.util.ArrayList;
+
 import game_object.Block;
 import game_window.Panel_2048;
 /*
@@ -13,12 +15,15 @@ public class Game_Control {
 	public static String direction;//移动方向
 	public static boolean anyblock_move=false;
 	private static int x,y;//表示当前自动填充数字的方块坐标，每次移动后刷新
+	private static ArrayList<Integer> mergeIndicator= new ArrayList<Integer>();
+	
+	
 	/*
 	 * 此方法是合法移动后才会执行的
 	 * 如果在按键方向上没有任何方块被移动，则不会生成新方块
 	 * flag用来标识这次移动是不是有效的移动
 	 */
-	public static void setBlock(boolean flag){
+	public static boolean setBlock(boolean flag){
 			if (flag) {
 				//只找一次可能找不到合适的空格来赋值，所以循环
 				while (true) {
@@ -28,25 +33,51 @@ public class Game_Control {
 						if (block.x == x && block.y == y && block.value == 0) {
 							block.value = 2;
 							Recorder.USEFULL_MOVE_TIMES++;
+							mergeIndicator=new ArrayList<Integer>();
 							anyblock_move = false;
-							return;
+							return true;
 						}
 					}
 				}
-			}else{
-				System.out.println("没有格子被移动");
 			}
+			return false;	
 	}
+	
 	//交换的时候只需要交换VALUE
 	public static void exchange(Block b1,Block b2){
 			b2.value=b1.value;
 			b1.value=0;
 	}
-	//b1向b2融合
+	/*
+	 * b1向b2融合
+	 * 但是在一次移动中
+	 * 每一行或者每一列只能有一次融合
+	 * 
+	 */
 	public static void merge(Block b1,Block b2){
-		Recorder.SCORES=Recorder.SCORES+2*b2.value;
-		b1.value=0;
-		b2.value=2*b2.value;
+		
+		if(!mergeIndicator.contains(b1.value)){
+			/*
+			 * 下面这段代码要实现的功能是记录融合发生时的 行 或者 列
+			 */
+			int val = 0;
+			switch (direction) {
+			case "up":
+			case "down":
+				val = b1.x;
+				break;
+			case "left":
+			case "right":
+				val=b1.y;
+				break;
+			}
+			mergeIndicator.add(val);
+			
+			Recorder.SCORES=Recorder.SCORES+2*b2.value;
+			b1.value=0;
+			b2.value=2*b2.value;
+		}
+		
 	}
 	//找到下一块特定坐标的砖块，与方向有关
 	public static Block getBlock(Block block,String dir){
