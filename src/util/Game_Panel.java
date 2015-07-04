@@ -1,7 +1,6 @@
 package util;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 /*
  * 写一个无边框，可以设定大小
@@ -22,7 +21,6 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 	private boolean isRolling;
 	//为了实现只能鼠标左键拖动窗口  加入下面属性
 	private boolean canmove=false;
-	
 	//定义主页面按钮大小的常量
 	private static final int MENU_GAP=75,MENU_WIDTH=200,MENU_HEIGHT=65;
 	//定义按钮组件
@@ -30,14 +28,12 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 	protected JButton setup;
 	protected JButton about;
 	protected JButton exit;
-	
 	private JFrame f;
 	private int screenX=t.getScreenSize().width;
 	private int screenY=t.getScreenSize().height;
 	//记录点击时鼠标位置 拖动要用
 	private int mouseX;
 	private int mouseY;
-	
 	@Override
  	public void paint(Graphics g){
 		super.paint(g);
@@ -47,7 +43,6 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 		about.updateUI();
 		exit.updateUI();
 	}
-	
 	/*设置窗体位置  要有隐藏或者显示的方向 
 	 * hiden=true 是隐藏
 	 * diection=1：左  2：上  3：右
@@ -168,7 +163,6 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 					canmove=false;
 				}
 			}
-
 			//鼠标退出 且在屏幕边缘 自动隐藏
  			public void mouseExited(MouseEvent e) {
 				if (!isRolling) {
@@ -230,44 +224,36 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 				}	
 			}	
 		});
-		
 		//初始化按钮 设定按钮位置
 		start=new JButton(Image_Util.GetIcon("images\\start.png"));start.setSize(MENU_WIDTH, MENU_HEIGHT);
 		setup=new JButton(Image_Util.GetIcon("images\\setup.png"));setup.setSize(MENU_WIDTH, MENU_HEIGHT);
 		about=new JButton(Image_Util.GetIcon("images\\about.png"));about.setSize(MENU_WIDTH, MENU_HEIGHT);
 		exit=new JButton(Image_Util.GetIcon("images\\exit.png"));exit.setSize(MENU_WIDTH, MENU_HEIGHT);
-	
 		//添加按钮
 		setLayout(null);
-		add(start);add(setup);add(about);add(exit);
-				
+		add(start);add(setup);add(about);add(exit);		
 		//给按钮加监听器，实现鼠标移动上去变色
 		start.addMouseListener(this);start.addActionListener(this);
 		setup.addMouseListener(this);setup.addActionListener(this);
 		about.addMouseListener(this);about.addActionListener(this);
-		exit.addMouseListener(this);exit.addActionListener(this);
-				
+		exit.addMouseListener(this);exit.addActionListener(this);	
 		//设置按钮位置
 		start.setLocation(GAME_WIDTH/3, GAME_HEIGHT/2);
 		setup.setLocation(GAME_WIDTH/3, GAME_HEIGHT/2+MENU_GAP);
 		about.setLocation(GAME_WIDTH/3, GAME_HEIGHT/2+2*MENU_GAP);
 		exit.setLocation(GAME_WIDTH/3, GAME_HEIGHT/2+3*MENU_GAP);
-		
 		f.add(this);
 		f.setUndecorated(true);
 		f.setAlwaysOnTop(true);
 		f.setVisible(true);
 	}
-	
 	public Game_Panel(){
 		init();
 		updateUI();
 	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(setup)){
-			
+		if(e.getSource().equals(setup)){	
 		}
 		if(e.getSource().equals(about)){ 
 			JTextArea jta =new JTextArea();
@@ -281,18 +267,14 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 			jta.setSize(150, 150);
 			jta.setEditable(false);
 			JOptionPane.showConfirmDialog(this, jta, "关于", JOptionPane.CLOSED_OPTION,2);
-			
 		}
 		if(e.getSource().equals(exit)){
 			System.exit(0);
 		}
-		
 	}
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	@Override

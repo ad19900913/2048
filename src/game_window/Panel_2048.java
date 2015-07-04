@@ -1,25 +1,23 @@
 package game_window;
 import game_object.Block;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-
 import util.Game_Control;
 import util.Game_Panel;
-
-
+/*
+ * 简单的2048游戏
+ * 
+ * 还需完善的功能有计分，计时，计步
+ * 
+ */
 public class Panel_2048 extends Game_Panel implements KeyListener{
-	
 	private boolean playing;//标志游戏是否开始
 	public static ArrayList<Block> blocks;
 	private Robot robot=new Robot();//模拟自动运行
-	
 	class Robot extends Thread{
-
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
@@ -43,8 +41,6 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 			}
 		}
 	}
-	
-	
 	public Panel_2048(){
 		blocks=new ArrayList<Block>();
 		//初始化16个空白方块,初始化一个带数值的方块
@@ -62,7 +58,6 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 	public static void main(String[] args) {
 		new Panel_2048();
 	}
-	
 	//游戏初始化工作在这里 
 	public void game_init(){
 		removeAll();
@@ -70,7 +65,6 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 		addKeyListener(this);
 		//robot.start();
 	}
-	
 	@Override
 	public void paint(Graphics g) {
 		// TODO Auto-generated method stub
@@ -86,7 +80,6 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 			}
 		}
 	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(start)){
@@ -161,8 +154,5 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 		if(e.getKeyCode()==KeyEvent.VK_Q){
 			System.exit(0);
 		}
-		
 	}
-	
-	
 }
