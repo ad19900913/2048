@@ -1,12 +1,17 @@
 package game_window;
 import game_object.Block;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Date;
+
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+
 import util.Game_Control;
 import util.Game_Panel;
+import util.Recorder;
 /*
  * 简单的2048游戏
  * 
@@ -14,9 +19,12 @@ import util.Game_Panel;
  * 
  */
 public class Panel_2048 extends Game_Panel implements KeyListener{
-	private boolean playing;//标志游戏是否开始
+	boolean playing;//标志游戏是否开始
 	public static ArrayList<Block> blocks;
 	private Robot robot=new Robot();//模拟自动运行
+	Date startDate;
+	private Stats_Frame sf;
+	
 	class Robot extends Thread{
 		@Override
 		public void run() {
@@ -42,6 +50,10 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 		}
 	}
 	public Panel_2048(){
+		
+		sf=new Stats_Frame(this);
+		new Thread(sf.stats_Panel).start();
+		
 		blocks=new ArrayList<Block>();
 		//初始化16个空白方块,初始化一个带数值的方块
 		for (int i = 1; i < 5; i++){
@@ -84,6 +96,7 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(start)){
 			playing = true;//标志游戏开始
+			startDate=new Date();
 			game_init();
 			repaint();
 		}
@@ -101,6 +114,7 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 					   +"微闻环佩摇声\r\n"
 					   +"\r\n"
 					   +"游戏中按Q键退出游戏\r\n"
+					   +"按F键隐藏或显示计分条\r\n"
 					   +"W、A、S、D为控制键\r\n"
 					   );
 			jta.setSize(150, 250);
@@ -124,32 +138,39 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 		
 	}
 
+	public void next() {
+		Game_Control.gogogo();//确定方向后处理
+		Game_Control.setBlock(Game_Control.anyblock_move);//生成新的随机块
+		Recorder.MOVE_TIMES++;
+		repaint();//重画
+	}
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getKeyCode()==KeyEvent.VK_W){
 			Game_Control.direction="up";
-			Game_Control.gogogo();//确定方向后处理
-			Game_Control.setBlock(Game_Control.anyblock_move);//生成新的随机块
-			repaint();//重画
+			next();
 		}
 		if(e.getKeyCode()==KeyEvent.VK_S){
 			Game_Control.direction="down";
-			Game_Control.gogogo();//确定方向后处理
-			Game_Control.setBlock(Game_Control.anyblock_move);//生成新的随机块
-			repaint();//重画
+			next();
 		}
 		if(e.getKeyCode()==KeyEvent.VK_A){
 			Game_Control.direction="left";
-			Game_Control.gogogo();//确定方向后处理
-			Game_Control.setBlock(Game_Control.anyblock_move);//生成新的随机块
-			repaint();//重画
+			next();
 		}
 		if(e.getKeyCode()==KeyEvent.VK_D){
 			Game_Control.direction="right";
-			Game_Control.gogogo();//确定方向后处理
-			Game_Control.setBlock(Game_Control.anyblock_move);//生成新的随机块
-			repaint();//重画
+			next();
+		}
+		if(e.getKeyCode()==KeyEvent.VK_F){
+			//实现弹出统计窗口
+			if(sf.isVisible()){
+				sf.setVisible(false);
+			}else{
+				sf.setVisible(true);
+			}
 		}
 		if(e.getKeyCode()==KeyEvent.VK_Q){
 			System.exit(0);

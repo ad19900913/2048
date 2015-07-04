@@ -27,6 +27,7 @@ public class Game_Control {
 					for (Block block : Panel_2048.blocks) {
 						if (block.x == x && block.y == y && block.value == 0) {
 							block.value = 2;
+							Recorder.USEFULL_MOVE_TIMES++;
 							anyblock_move = false;
 							return;
 						}
@@ -43,6 +44,7 @@ public class Game_Control {
 	}
 	//b1Ïòb2ÈÚºÏ
 	public static void merge(Block b1,Block b2){
+		Recorder.SCORES=Recorder.SCORES+2*b2.value;
 		b1.value=0;
 		b2.value=2*b2.value;
 	}
