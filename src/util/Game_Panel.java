@@ -1,7 +1,18 @@
 package util;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 /*
  * 写一个无边框，可以设定大小
  * 可以鼠标拖动，并且不超出屏幕边界
@@ -9,20 +20,13 @@ import javax.swing.*;
  * 作为父类给其他游戏用
  */
 public class Game_Panel extends JPanel implements MouseListener,ActionListener{
-	//窗口大小
-	public static final int GAME_WIDTH=600;
-	public static final int GAME_HEIGHT=600;
-	//在屏幕边缘隐藏时露出的像素
-	private final int SHOW_PIXELS=5;
-	//休眠时间
-	private final int SLEEP_TIME=5;
+
 	private Toolkit t=Toolkit.getDefaultToolkit();
 	//窗口正在自动显示或者隐藏时对于鼠标不能产生响应，否则会出现闪烁
 	private boolean isRolling;
 	//为了实现只能鼠标左键拖动窗口  加入下面属性
 	private boolean canmove=false;
-	//定义主页面按钮大小的常量
-	private static final int MENU_GAP=75,MENU_WIDTH=200,MENU_HEIGHT=65;
+
 	//定义按钮组件
 	protected JButton start;
 	protected JButton setup;
@@ -37,7 +41,7 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 	@Override
  	public void paint(Graphics g){
 		super.paint(g);
-		g.drawImage(Image_Util.GetImage("images\\login.jpg"), 0, 0, GAME_WIDTH, GAME_HEIGHT, this);
+		g.drawImage(Image_Util.GetImage("images\\login.jpg"), 0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT, this);
 		start.updateUI();
 		setup.updateUI();
 		about.updateUI();
@@ -57,39 +61,36 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 				if (hiden) {
 					//向左隐藏
 					if (direction==1) {
-						while (frameX > SHOW_PIXELS-GAME_WIDTH) {
-							frameX -= SHOW_PIXELS;
+						while (frameX > Config.SHOW_PIXELS-Config.GAME_WIDTH) {
+							frameX -= Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
 							try {
-								sleep(SLEEP_TIME);
+								sleep(Config.SLEEP_TIME);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
 					}
 					//向右隐藏
 					else if(direction==3){
-						while (frameX < screenX-SHOW_PIXELS) {
-							frameX += SHOW_PIXELS;
+						while (frameX < screenX-Config.SHOW_PIXELS) {
+							frameX += Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
 							try {
-								sleep(SLEEP_TIME);
+								sleep(Config.SLEEP_TIME);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
 					}
 					//向上隐藏
 					else if(direction==2){
-						while (frameY > SHOW_PIXELS-GAME_HEIGHT) {
-							frameY -= SHOW_PIXELS;
+						while (frameY > Config.SHOW_PIXELS-Config.GAME_HEIGHT) {
+							frameY -= Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
 							try {
-								sleep(SLEEP_TIME);
+								sleep(Config.SLEEP_TIME);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -99,39 +100,36 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 				else{
 					//从左向右弹出
 					if (direction==1) {
-						while (frameX < -SHOW_PIXELS) {
-							frameX += SHOW_PIXELS;
+						while (frameX < -Config.SHOW_PIXELS) {
+							frameX += Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
 							try {
-								sleep(SLEEP_TIME);
+								sleep(Config.SLEEP_TIME);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
 					}
 					//从右向左弹出 
 					else if(direction==3){
-						while (frameX > screenX-GAME_WIDTH+SHOW_PIXELS){
-							frameX -= SHOW_PIXELS;
+						while (frameX > screenX-Config.GAME_WIDTH+Config.SHOW_PIXELS){
+							frameX -= Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
 							try {
-								sleep(SLEEP_TIME);
+								sleep(Config.SLEEP_TIME);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
 					}
 					//从上向下弹出
 					else if(direction==2){
-						while (frameY < -SHOW_PIXELS) {
-							frameY += SHOW_PIXELS;
+						while (frameY < -Config.SHOW_PIXELS) {
+							frameY += Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
 							try {
-								sleep(SLEEP_TIME);
+								sleep(Config.SLEEP_TIME);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -145,7 +143,7 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 	
 	public void init(){
 		f=new JFrame();
-		f.setSize(GAME_WIDTH, GAME_HEIGHT);
+		f.setSize(Config.GAME_WIDTH, Config.GAME_HEIGHT);
 		f.setLocationRelativeTo(null);
 		//实现窗口自动隐藏
 		f.addMouseListener(new MouseAdapter() {
@@ -158,7 +156,6 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 			}
 			// 只有点击鼠标左键才可以移动窗口
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
 				if (e.getButton()==MouseEvent.BUTTON1) {
 					canmove=false;
 				}
@@ -168,7 +165,7 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 				if (!isRolling) {
 					if (f.getX() <= 0) {//屏幕左侧
 						setloca(true, 1);
-					} else if (f.getX() >= screenX - GAME_WIDTH + SHOW_PIXELS) {//屏幕右侧
+					} else if (f.getX() >= screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS) {//屏幕右侧
 						setloca(true, 3);
 					} else if (f.getY() <= 0) {//屏幕上面
 						setloca(true, 2);
@@ -181,7 +178,7 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 					if (f.getX() <= 0) {//屏幕左侧
 						setloca(false, 1);
 					}
-					if (f.getX() >= screenX - GAME_WIDTH + SHOW_PIXELS) {//屏幕右侧
+					if (f.getX() >= screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS) {//屏幕右侧
 						setloca(false, 3);
 					}
 					if (f.getY() <= 0) {//屏幕上面
@@ -207,11 +204,11 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 						else {
 							f.setLocation(0, targetY);
 						}
-					}else if (targetX > screenX - GAME_WIDTH + SHOW_PIXELS){
+					}else if (targetX > screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS){
 						if (targetY < 0){
-							f.setLocation(screenX - GAME_WIDTH + SHOW_PIXELS, 0);
+							f.setLocation(screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS, 0);
 						} else {
-							f.setLocation(screenX - GAME_WIDTH + SHOW_PIXELS, targetY);
+							f.setLocation(screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS, targetY);
 						}
 
 					}else if (targetY < 0) {
@@ -225,10 +222,10 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 			}	
 		});
 		//初始化按钮 设定按钮位置
-		start=new JButton(Image_Util.GetIcon("images\\start.png"));start.setSize(MENU_WIDTH, MENU_HEIGHT);
-		setup=new JButton(Image_Util.GetIcon("images\\setup.png"));setup.setSize(MENU_WIDTH, MENU_HEIGHT);
-		about=new JButton(Image_Util.GetIcon("images\\about.png"));about.setSize(MENU_WIDTH, MENU_HEIGHT);
-		exit=new JButton(Image_Util.GetIcon("images\\exit.png"));exit.setSize(MENU_WIDTH, MENU_HEIGHT);
+		start=new JButton(Image_Util.GetIcon("images\\start.png"));start.setSize(Config.MENU_WIDTH, Config.MENU_HEIGHT);
+		setup=new JButton(Image_Util.GetIcon("images\\setup.png"));setup.setSize(Config.MENU_WIDTH, Config.MENU_HEIGHT);
+		about=new JButton(Image_Util.GetIcon("images\\about.png"));about.setSize(Config.MENU_WIDTH, Config.MENU_HEIGHT);
+		exit=new JButton(Image_Util.GetIcon("images\\exit.png"));exit.setSize(Config.MENU_WIDTH, Config.MENU_HEIGHT);
 		//添加按钮
 		setLayout(null);
 		add(start);add(setup);add(about);add(exit);		
@@ -238,10 +235,10 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 		about.addMouseListener(this);about.addActionListener(this);
 		exit.addMouseListener(this);exit.addActionListener(this);	
 		//设置按钮位置
-		start.setLocation(GAME_WIDTH/3, GAME_HEIGHT/2);
-		setup.setLocation(GAME_WIDTH/3, GAME_HEIGHT/2+MENU_GAP);
-		about.setLocation(GAME_WIDTH/3, GAME_HEIGHT/2+2*MENU_GAP);
-		exit.setLocation(GAME_WIDTH/3, GAME_HEIGHT/2+3*MENU_GAP);
+		start.setLocation(Config.GAME_WIDTH/3, Config.GAME_HEIGHT/2);
+		setup.setLocation(Config.GAME_WIDTH/3, Config.GAME_HEIGHT/2+Config.MENU_GAP);
+		about.setLocation(Config.GAME_WIDTH/3, Config.GAME_HEIGHT/2+2*Config.MENU_GAP);
+		exit.setLocation(Config.GAME_WIDTH/3, Config.GAME_HEIGHT/2+3*Config.MENU_GAP);
 		f.add(this);
 		f.setUndecorated(true);
 		f.setAlwaysOnTop(true);
@@ -274,24 +271,20 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub	
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getSource().equals(start)) start.setIcon(Image_Util.GetIcon("images\\start_select.jpg"));
 		if(e.getSource().equals(setup)) setup.setIcon(Image_Util.GetIcon("images\\setup_select.jpg"));
 		if(e.getSource().equals(about)) about.setIcon(Image_Util.GetIcon("images\\about_select.jpg"));
@@ -300,7 +293,6 @@ public class Game_Panel extends JPanel implements MouseListener,ActionListener{
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getSource().equals(start)) {start.setIcon(Image_Util.GetIcon("images\\start.png"));}
 		if(e.getSource().equals(setup)) {setup.setIcon(Image_Util.GetIcon("images\\setup.png"));}
 		if(e.getSource().equals(about)) {about.setIcon(Image_Util.GetIcon("images\\about.png"));}

@@ -1,4 +1,4 @@
-package game_window;
+package view;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import util.Config;
 import util.Recorder;
 
 public class Stats_Frame extends JFrame{
@@ -23,7 +24,7 @@ public class Stats_Frame extends JFrame{
 			super.paintComponent(g);
 			
 			g.setColor(new Color(187, 173, 160));
-			g.fillRect(0, 0, 600, 60);
+			g.fillRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT/10);
 			
 			g.setColor(Color.black);
 			g.setFont(new Font("Î¢ÈíÑÅºÚ",Font.BOLD,20));
@@ -44,7 +45,7 @@ public class Stats_Frame extends JFrame{
 					}
 					if (Stats_Frame.this.isVisible()) {
 						Stats_Frame.this.setLocation(p2.getLocationOnScreen().x,
-								p2.getLocationOnScreen().y - 60);
+								p2.getLocationOnScreen().y - Config.GAME_HEIGHT/10);
 						repaint();
 						
 						p2.requestFocusInWindow();
@@ -61,7 +62,7 @@ public class Stats_Frame extends JFrame{
 	
 	public Stats_Frame(Panel_2048 panel_2048){
 		p2=panel_2048;
-		setSize(600, 60);
+		setSize(Config.GAME_WIDTH, Config.GAME_HEIGHT/10);
 		setLocationRelativeTo(p2);
 		setUndecorated(true);
 		stats_Panel=new Stats_Panel();

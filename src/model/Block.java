@@ -1,16 +1,25 @@
-package game_object;
+package model;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import util.Game_Panel;
 
-public class Block {
+import util.Config;
+
+public class Block implements Cloneable{
 	public int x;//纵横坐标采用(1,1)(2,2)(3.3)(4.4)的形式
 	public int y;
 	public int value;//方块的数值
 	private int gap=10;//方块之间的间隔
-	private int width=(Game_Panel.GAME_WIDTH-5*gap)/4;//方块的大小
-	private int height=(Game_Panel.GAME_HEIGHT-5*gap)/4;
+	private int width=(Config.GAME_WIDTH-5*gap)/4;//方块的大小
+	private int height=(Config.GAME_HEIGHT-5*gap)/4;
+	
+	public Block(int x, int y, int value) {
+		super();
+		this.x = x;
+		this.y = y;
+		this.value = value;
+	}
+
 	public Block(int x, int y) {
 		super();
 		this.x = x;
@@ -83,4 +92,17 @@ public class Block {
 			g.drawString(Integer.toString(value), valueX, valueY);
 		}
 	}
+
+	@Override
+	public String toString() {
+		String string = "X:" + x + "\t" + "Y:" + y + "Value:" + value; 
+		return string;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return new Block(x, y, value);
+	}
+	
+	
 }

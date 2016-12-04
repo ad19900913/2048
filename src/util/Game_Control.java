@@ -1,8 +1,9 @@
 package util;
 import java.util.ArrayList;
 
-import game_object.Block;
-import game_window.Panel_2048;
+import model.Block;
+import view.Panel_2048;
+
 /*
  * 方块移动时的策略   分为两大步1.跨越空白格  2.融合
  * 方块B向某个方向上移动，如果该方向上下一步为空，则互相交换数值
@@ -12,7 +13,7 @@ import game_window.Panel_2048;
  *                         	 	  	
  */
 public class Game_Control {
-	public static String direction;//移动方向
+	public static int direction;//移动方向
 	public static boolean anyblock_move=false;
 	private static int x,y;//表示当前自动填充数字的方块坐标，每次移动后刷新
 	private static ArrayList<Integer> mergeIndicator= new ArrayList<Integer>();
@@ -62,12 +63,12 @@ public class Game_Control {
 			 */
 			int val = 0;
 			switch (direction) {
-			case "up":
-			case "down":
+			case 1:
+			case 2:
 				val = b1.x;
 				break;
-			case "left":
-			case "right":
+			case 3:
+			case 4:
 				val=b1.y;
 				break;
 			}
@@ -80,30 +81,30 @@ public class Game_Control {
 		
 	}
 	//找到下一块特定坐标的砖块，与方向有关
-	public static Block getBlock(Block block,String dir){
+	public static Block getBlock(Block block,int dir){
 		int targetX=block.x;//用来标识要找的目标块的坐标
 		int targetY=block.y;
 			switch (dir) {
-			case "up":
+			case 1:
 				while (getBlock(targetX, targetY-1).value==0) {
 					targetY-=1;
 					//进入while循环意味着方块至少移动了一次  
 					anyblock_move=true;
 				}
 				return getBlock(targetX, targetY);
-			case "down":
+			case 2:
 				while (getBlock(targetX, targetY+1).value==0) {
 					targetY+=1;
 					anyblock_move=true;
 				}
 				return getBlock(targetX, targetY);
-			case "left":
+			case 3:
 				while (getBlock(targetX-1, targetY).value==0) {
 					targetX-=1;
 					anyblock_move=true;
 				}
 				return getBlock(targetX, targetY);
-			case "right":
+			case 4:
 				while (getBlock(targetX+1, targetY).value==0) {
 					targetX+=1;
 					anyblock_move=true;
@@ -126,110 +127,110 @@ public class Game_Control {
 	}
 	
 	//处理方块运动的方法
-	public static void gogogo(){
-			/*
-			 * 下面是对于每一个有数字的方块进行尝试移动
-			 * 要实现一次按键可以使得方块从最左边移动到最右边，
-			 *  
-			 * 而且需要注意的是 一次有效的移动过程中  每一行或者每一列上最好只能有一次
-			 * 数值相同的融合，否则游戏难度会降低。
-			 * 就是 2 2 4 8        移动后应该变成
-			 *     0 4 4 8        而不是直接变成
-			 *     0 0 0 16
-			 *           
-			 */
-			//如果向上移动，那么是从最上面一行开始逐行往下计算 方块的移动
-			if(direction=="up"){
-				for (int j = 1; j < 5; j++) {
-					for (int j2 = 1; j2 < 5; j2++) {
-						Block block_1=getBlock(j2, j);
-						if (block_1.value!=0) {//只尝试移动有数值的方块
-							/*
-							 * 下面一步应该能够跨越方块  比如向右的移动中  
-							 * 能从 2 0 0 4 的2直接移动成 0 0 2 4 的格局 
-							 * 实现一次性移动两格
-							 * 下面这一句的功能是直接定位
-							 */
-							Block block_2 = getBlock(block_1, direction);
-							//先交换一下，在处理
-							if (!block_1.equals(block_2)) {
-								exchange(block_1, block_2);//交换完成后主块变成block_2
-								anyblock_move = true;
-							}
-							
-							Block temp=getBlock(block_2.x,block_2.y-1);
-							if (block_2.value == temp.value) {
-								merge(block_2, temp);
-								anyblock_move = true;
-							}
+	public static void move(int direction){
+		anyblock_move = false;
+		/*
+		 * 下面是对于每一个有数字的方块进行尝试移动
+		 * 要实现一次按键可以使得方块从最左边移动到最右边，
+		 *  
+		 * 而且需要注意的是 一次有效的移动过程中  每一行或者每一列上最好只能有一次
+		 * 数值相同的融合，否则游戏难度会降低。
+		 * 就是 2 2 4 8        移动后应该变成
+		 *     0 4 4 8        而不是直接变成
+		 *     0 0 0 16
+		 *           
+		 */
+		//如果向上移动，那么是从最上面一行开始逐行往下计算 方块的移动
+		if(direction==1){
+			for (int j = 1; j < 5; j++) {
+				for (int j2 = 1; j2 < 5; j2++) {
+					Block block_1=getBlock(j2, j);
+					if (block_1.value!=0) {//只尝试移动有数值的方块
+						/*
+						 * 下面一步应该能够跨越方块  比如向右的移动中  
+						 * 能从 2 0 0 4 的2直接移动成 0 0 2 4 的格局 
+						 * 实现一次性移动两格
+						 * 下面这一句的功能是直接定位
+						 */
+						Block block_2 = getBlock(block_1, direction);
+						//先交换一下，在处理
+						if (!block_1.equals(block_2)) {
+							exchange(block_1, block_2);//交换完成后主块变成block_2
+							anyblock_move = true;
 						}
-					}
-				}	
-			}
-			
-			if(direction=="down"){
-				for (int j = 4; j > 0; j--) {
-					for (int j2 = 1; j2 < 5; j2++) {
-						Block block_1=getBlock(j2, j);
-						if (block_1.value!=0) {//只尝试移动有数值的方块
-							Block block_2 = getBlock(block_1, direction);
-							if (!block_1.equals(block_2)) {
-								exchange(block_1, block_2);//交换完成后主块变成block_2
-								anyblock_move = true;
-							}
-							
-							Block temp=getBlock(block_2.x,block_2.y+1);
-							if (block_2.value == temp.value) {
-								merge(block_2, temp);
-								anyblock_move = true;
-							}
+						
+						Block temp=getBlock(block_2.x,block_2.y-1);
+						if (block_2.value == temp.value) {
+							merge(block_2, temp);
+							anyblock_move = true;
 						}
 					}
 				}
-			}
-			
-			if(direction=="right"){
-				for (int j = 4; j > 0; j--) {
-					for (int j2 = 1; j2 < 5; j2++) {
-						Block block_1=getBlock(j, j2);
-						if (block_1.value!=0) {//只尝试移动有数值的方块
-							Block block_2 = getBlock(block_1, direction);
-							if (!block_1.equals(block_2)) {
-								exchange(block_1, block_2);//交换完成后主块变成block_2
-								anyblock_move = true;
-							}
-							
-							Block temp=getBlock(block_2.x+1,block_2.y);
-							if (block_2.value == temp.value) {
-								merge(block_2, temp);
-								anyblock_move = true;
-							}
-						}
-					}
-				}
-			}
-			
-			if(direction=="left"){
-				for (int j = 1; j < 5; j++) {
-					for (int j2 = 1; j2 < 5; j2++) {
-						Block block_1=getBlock(j, j2);
-						if (block_1.value!=0) {//只尝试移动有数值的方块
-							Block block_2 = getBlock(block_1, direction);
-							if (!block_1.equals(block_2)) {
-								exchange(block_1, block_2);//交换完成后主块变成block_2
-								anyblock_move = true;
-							}
-							
-							Block temp=getBlock(block_2.x-1,block_2.y);
-							if (block_2.value == temp.value) {
-								merge(block_2, temp);
-								anyblock_move = true;
-							}
-						}
-					}
-				}
-			}
+			}	
+		}
 		
+		if(direction==2){
+			for (int j = 4; j > 0; j--) {
+				for (int j2 = 1; j2 < 5; j2++) {
+					Block block_1=getBlock(j2, j);
+					if (block_1.value!=0) {//只尝试移动有数值的方块
+						Block block_2 = getBlock(block_1, direction);
+						if (!block_1.equals(block_2)) {
+							exchange(block_1, block_2);//交换完成后主块变成block_2
+							anyblock_move = true;
+						}
+						
+						Block temp=getBlock(block_2.x,block_2.y+1);
+						if (block_2.value == temp.value) {
+							merge(block_2, temp);
+							anyblock_move = true;
+						}
+					}
+				}
+			}
+		}
+		
+		if(direction==4){
+			for (int j = 4; j > 0; j--) {
+				for (int j2 = 1; j2 < 5; j2++) {
+					Block block_1=getBlock(j, j2);
+					if (block_1.value!=0) {//只尝试移动有数值的方块
+						Block block_2 = getBlock(block_1, direction);
+						if (!block_1.equals(block_2)) {
+							exchange(block_1, block_2);//交换完成后主块变成block_2
+							anyblock_move = true;
+						}
+						
+						Block temp=getBlock(block_2.x+1,block_2.y);
+						if (block_2.value == temp.value) {
+							merge(block_2, temp);
+							anyblock_move = true;
+						}
+					}
+				}
+			}
+		}
+		
+		if(direction==3){
+			for (int j = 1; j < 5; j++) {
+				for (int j2 = 1; j2 < 5; j2++) {
+					Block block_1=getBlock(j, j2);
+					if (block_1.value!=0) {//只尝试移动有数值的方块
+						Block block_2 = getBlock(block_1, direction);
+						if (!block_1.equals(block_2)) {
+							exchange(block_1, block_2);//交换完成后主块变成block_2
+							anyblock_move = true;
+						}
+						
+						Block temp=getBlock(block_2.x-1,block_2.y);
+						if (block_2.value == temp.value) {
+							merge(block_2, temp);
+							anyblock_move = true;
+						}
+					}
+				}
+			}
+		}
 	}
 	
 }

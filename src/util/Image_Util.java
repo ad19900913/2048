@@ -2,7 +2,6 @@ package util;
 
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.io.File;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;

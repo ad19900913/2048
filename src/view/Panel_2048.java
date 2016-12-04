@@ -1,62 +1,41 @@
-package game_window;
-import game_object.Block;
+package view;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
+import model.Block;
+import util.Config;
 import util.Game_Control;
 import util.Game_Panel;
 import util.Recorder;
+import util.Robot;
 /*
  * 简单的2048游戏
- * 
- * 已经完成的功能有计分，计时，计步
- * 还需要完成算法优化，游戏获胜和失败的条件判断提示
- * 
  */
 public class Panel_2048 extends Game_Panel implements KeyListener{
 	boolean playing,gameover,success;//标志游戏是否开始
 	public static ArrayList<Block> blocks;
-	private Robot robot=new Robot();//模拟自动运行
+	private Robot robot=new Robot(this);//模拟自动运行
+	
 	Date startDate;
 	private Stats_Frame sf;
 	
-	class Robot extends Thread{
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			while (true) {
-				try {
-					sleep(10);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if(Math.random()<0.33){
-					Game_Control.direction="down";
-				}else if(Math.random()>0.66){
-					Game_Control.direction="left";
-				}else{
-					Game_Control.direction="right";
-				}
-				Game_Control.gogogo();//确定方向后处理
-				Game_Control.setBlock(Game_Control.anyblock_move);//生成新的随机块
-				repaint();//重画
-			}
-		}
-	}
-
 	public Panel_2048(){
-		addKeyListener(this);
+		addKeyListener(this);	
 	}
 	
 	public static void main(String[] args) {
 		new Panel_2048();
+		
 	}
 	//游戏初始化工作在这里 
 	public void game_init(){
@@ -64,6 +43,7 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 		gameover=false;
 		success=false;
 		startDate=new Date();
+		
 		sf=new Stats_Frame(this);
 		new Thread(sf.stats_Panel).start();
 		
@@ -79,36 +59,35 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 			}
 		}
 		removeAll();
-
-		
-		//robot.start();
+		if (Config.AUTORUN && !robot.isAlive()) {
+			//自动运行
+			robot.start();
+		}
 	}
 	
 	//判断游戏当前状态  是正在游戏  还是游戏失败  或者成功
 	public void judge_game_state(){
 		for (Block block : blocks) {
-			if(block.value==32){
+			if(block.value==2048){
 				success=true;
-				playing=false;
+//				playing=false;
 				return;
 			}
 			if(block.value==0){
-				playing=true;
+//				playing=true;
 				return;
 			}
 		}
-		playing=false;
+//		playing=false;
 	}
-	
 	
 	@Override
 	public void paint(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paint(g);
 		
 		if(playing){
 			g.setColor(new Color(187, 173, 160));
-			g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+			g.fillRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT);
 			judge_game_state();
 			//画出每个方块
 			for (Block block : blocks) {
@@ -165,20 +144,16 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 	@Override
 	public void keyTyped(KeyEvent e) {
 		if(e.getKeyChar()=='w'){
-			Game_Control.direction="up";
-			next();
+			next(1);
 		}
 		if(e.getKeyChar()=='s'){
-			Game_Control.direction="down";
-			next();
+			next(2);
 		}
 		if(e.getKeyChar()=='a'){
-			Game_Control.direction="left";
-			next();
+			next(3);
 		}
 		if(e.getKeyChar()=='d'){
-			Game_Control.direction="right";
-			next();
+			next(4);
 		}
 		if(e.getKeyChar()=='f'){
 			//实现弹出统计窗口
@@ -196,24 +171,23 @@ public class Panel_2048 extends Game_Panel implements KeyListener{
 		if(e.getKeyChar()=='q'){
 			System.exit(0);
 		}
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
-	public void next() {
-		Game_Control.gogogo();//确定方向后处理
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			robot.isRunning = !robot.isRunning;
+		}
+	}
+
+	public void next(int direction) {
+		Game_Control.move(direction);//确定方向后处理
 		Game_Control.setBlock(Game_Control.anyblock_move);//生成新的随机块
 		Recorder.MOVE_TIMES++;
 		repaint();//重画
 	}
 	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent e) {}
+
+	
 }
