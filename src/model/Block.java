@@ -1,18 +1,31 @@
 package model;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-import util.Config;
+import config.Config;
 
-public class Block implements Cloneable{
-	public int x;//纵横坐标采用(1,1)(2,2)(3.3)(4.4)的形式
+public class Block implements Cloneable {
+	// 纵横坐标采用(1,1)(2,2)(3.3)(4.4)的形式
+	public int x;
 	public int y;
-	public int value;//方块的数值
-	private int gap=10;//方块之间的间隔
-	private int width=(Config.GAME_WIDTH-5*gap)/4;//方块的大小
-	private int height=(Config.GAME_HEIGHT-5*gap)/4;
-	
+	// 方块的数值
+	public int value;
+	// 方块之间的间隔
+	private int gap = 10;
+	// 方块的大小
+	private int width = (Config.GAME_WIDTH - 5 * gap) / 4;
+	private int height = (Config.GAME_HEIGHT - 5 * gap) / 4;
+	/*
+	 * 在一次格局变更中，用于标示方块是否是融合的
+	 * 比如2 2 4 8 这样的结构
+	 * 向右融合，按从左到右的顺序进行
+	 * 第一次融合后变为0 4 4 8
+	 * 其中第二位的4是融合生成的，不能在这次格局变更中再次融合
+	 */
+	public boolean canMerge = true;
+
 	public Block(int x, int y, int value) {
 		super();
 		this.x = x;
@@ -24,18 +37,18 @@ public class Block implements Cloneable{
 		super();
 		this.x = x;
 		this.y = y;
-	}	
-	
+	}
+
 	@Override
 	public boolean equals(Object obj) {
-		Block temp=(Block) obj;
-		if(x==temp.x&&y==temp.y){
+		Block temp = (Block) obj;
+		if (x == temp.x && y == temp.y) {
 			return true;
 		}
 		return false;
 	}
 
-	public Color getColor(int value){
+	public Color getColor(int value) {
 		switch (value) {
 		case 0:
 			return new Color(204, 192, 179);
@@ -67,35 +80,35 @@ public class Block implements Cloneable{
 		return new Color(204, 192, 179);
 	}
 
-	public int getValueX(){
-		if(value<10){
-			return (gap*x+width*(x-1))+(width/2)-20;
-		}else if (value>10&&value<100){
-			return (gap*x+width*(x-1))+(width/2)-35;
-		}else if(value>1000){
-			return (gap*x+width*(x-1))+(width/2)-65;
-		}else{
-			return (gap*x+width*(x-1))+(width/2)-50;
+	public int getValueX() {
+		if (value < 10) {
+			return (gap * x + width * (x - 1)) + (width / 2) - 20;
+		} else if (value > 10 && value < 100) {
+			return (gap * x + width * (x - 1)) + (width / 2) - 35;
+		} else if (value > 1000) {
+			return (gap * x + width * (x - 1)) + (width / 2) - 65;
+		} else {
+			return (gap * x + width * (x - 1)) + (width / 2) - 50;
 		}
 	}
-	
-	public void draw(Graphics g){
+
+	public void draw(Graphics g) {
 		g.setColor(getColor(value));
-		if(value==0){
-			g.fill3DRect((gap*x+width*(x-1)), (gap*y+width*(y-1)), width, height, true);
-		}else{
-			g.fill3DRect((gap*x+width*(x-1)), (gap*y+width*(y-1)), width, height, true);
+		if (value == 0) {
+			g.fill3DRect((gap * x + width * (x - 1)), (gap * y + width * (y - 1)), width, height, true);
+		} else {
+			g.fill3DRect((gap * x + width * (x - 1)), (gap * y + width * (y - 1)), width, height, true);
 			g.setColor(new Color(119, 110, 101));
 			g.setFont(new Font("微软雅黑", Font.BOLD, 50));
-			int valueX=getValueX();
-			int valueY=(gap*y+width*(y-1))+height/2+20;
+			int valueX = getValueX();
+			int valueY = (gap * y + width * (y - 1)) + height / 2 + 20;
 			g.drawString(Integer.toString(value), valueX, valueY);
 		}
 	}
 
 	@Override
 	public String toString() {
-		String string = "X:" + x + "\t" + "Y:" + y + "Value:" + value; 
+		String string = "X:" + x + "\t" + "Y:" + y + "Value:" + value;
 		return string;
 	}
 
@@ -103,6 +116,5 @@ public class Block implements Cloneable{
 	public Object clone() throws CloneNotSupportedException {
 		return new Block(x, y, value);
 	}
-	
-	
+
 }
