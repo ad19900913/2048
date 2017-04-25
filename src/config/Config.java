@@ -2,6 +2,8 @@ package config;
 
 import java.io.IOException;
 
+import util.FileUtil;
+
 public class Config {
 	/**
 	 * 窗口宽度
@@ -44,15 +46,23 @@ public class Config {
 	/**
 	 * 单调性
 	 */
-	public static int MONOTONICITY = 0;
+	public static int MONOTONICITY = 60;
 	/**
 	 * 平滑性
 	 */
-	public static int SMOOTHNESS = 10;
+	public static int SMOOTHNESS = 0;
 	/**
 	 * 空闲性
 	 */
-	public static int FREETILES = 90;
+	public static int FREETILES = 40;
+	/**
+	 * 总分
+	 */
+	public static int TOTAL = 100;
+	/**
+	 * 间隔
+	 */
+	public static int GAP = 5;
 	/**
 	 * 日志文件
 	 */
@@ -63,15 +73,16 @@ public class Config {
 	 * @throws IOException 
 	 */
 	public static void improveArgs() throws IOException {
-		outer: while (MONOTONICITY <= 100) {
-			while (SMOOTHNESS < 100 - MONOTONICITY) {
-				SMOOTHNESS += 3;
-				FREETILES = 100 - MONOTONICITY - SMOOTHNESS;
+		outer: while (MONOTONICITY <= TOTAL) {
+			while (SMOOTHNESS <= TOTAL - MONOTONICITY) {
+//				FileUtil.append("MONOTONICITY:" + MONOTONICITY + "\tSMOOTHNESS:" + SMOOTHNESS + "\tFREETILES:" + FREETILES);
+				SMOOTHNESS += GAP;
+				FREETILES = TOTAL - MONOTONICITY - SMOOTHNESS;
 				break outer;
 			}
-			MONOTONICITY += 3;
-			SMOOTHNESS = -3;
-			FREETILES = -3;
+			MONOTONICITY += GAP;
+			SMOOTHNESS = 0;
+			FREETILES = TOTAL - MONOTONICITY - SMOOTHNESS;
 		}
 	}
 	
