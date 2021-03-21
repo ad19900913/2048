@@ -1,30 +1,30 @@
-package controller;
+package tech.sisyphus.controller;
 
-import config.Config;
-import config.Recorder;
-import model.Block;
-import util.CommonUtil;
-import util.GameScorer;
-import util.Node;
-import view.Panel2048;
+import tech.sisyphus.config.Config;
+import tech.sisyphus.config.Recorder;
+import tech.sisyphus.model.Block;
+import tech.sisyphus.util.CommonUtil;
+import tech.sisyphus.util.GameScorer;
+import tech.sisyphus.util.Node;
+import tech.sisyphus.view.MainPanel;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Robot extends Thread {
-	//是否处于运行状态
-	public boolean isRunning = true;
-	private Panel2048 panel;
-	private GameScorer scorer = new GameScorer();
-	private ArrayList<Block> original = new ArrayList<Block>();
-	private Node max;
-	private double value;
+    //是否处于运行状态
+    public boolean isRunning = true;
+    private MainPanel panel;
+    private GameScorer scorer = new GameScorer();
+    private ArrayList<Block> original = new ArrayList<Block>();
+    private Node max;
+    private double value;
 
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				sleep(Config.AUTORUN_SLEEP_TIME);
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                sleep(Config.AUTORUN_SLEEP_TIME);
 			} catch (InterruptedException e) {
 			}
 			if (isRunning) {
@@ -112,19 +112,19 @@ public class Robot extends Thread {
 		for (Node node : parent.children) {
 			if (node.children != null && node.children.size() > 0) {
 				dfs(node);
-			} else {
-				if (node.value > value) {
-					max = node;
-					value = node.value;
-				}
-			}
-		}
-		return max;
-	}
-	
-	public Robot(Panel2048 panel) {
-		super();
-		this.panel = panel;
-	}
-	
+            } else {
+                if (node.value > value) {
+                    max = node;
+                    value = node.value;
+                }
+            }
+        }
+        return max;
+    }
+
+    public Robot(MainPanel panel) {
+        super();
+        this.panel = panel;
+    }
+
 }

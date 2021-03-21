@@ -1,6 +1,6 @@
-package util;
+package tech.sisyphus.util;
 
-import config.Config;
+import tech.sisyphus.config.Config;
 
 import javax.swing.*;
 import java.awt.*;

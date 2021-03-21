@@ -1,4 +1,4 @@
-package config;
+package tech.sisyphus.config;
 
 import java.io.IOException;
 

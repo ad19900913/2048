@@ -1,8 +1,9 @@
-package controller;
+package tech.sisyphus.controller;
 
-import config.Recorder;
-import model.Block;
-import view.Panel2048;
+
+import tech.sisyphus.config.Recorder;
+import tech.sisyphus.model.Block;
+import tech.sisyphus.view.MainPanel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +23,11 @@ public class GameControl {
     public boolean anyblockMove = false;
     //表示当前自动填充数字的方块坐标，每次移动后刷新
     private int x, y;
-    private Panel2048 panel_2048;
+    private MainPanel mainPanel;
 
-    public GameControl(Panel2048 panel_2048) {
+    public GameControl(MainPanel mainPanel) {
         super();
-        this.panel_2048 = panel_2048;
+        this.mainPanel = mainPanel;
     }
 
     /*
@@ -39,7 +40,7 @@ public class GameControl {
             List<Block> list = new ArrayList<Block>();
             x = (int) (Math.random() * 4 + 1);
             y = (int) (Math.random() * 4 + 1);
-            for (Block block : panel_2048.blocks) {
+            for (Block block : mainPanel.blocks) {
                 if (block.value == 0) {
                     list.add(block);
                 }
@@ -54,7 +55,7 @@ public class GameControl {
     }
 
     private void clearMergeFlag() {
-        for (Block block : panel_2048.blocks) {
+        for (Block block : mainPanel.blocks) {
             block.canMerge = true;
         }
     }
@@ -127,9 +128,9 @@ public class GameControl {
 
     //获取特定坐标的Block对象
     public Block getBlock(int x, int y) {
-        for (Block block_1 : panel_2048.blocks) {
-            if (block_1.x == x && block_1.y == y) {
-                return block_1;
+        for (Block block : mainPanel.blocks) {
+            if (block.x == x && block.y == y) {
+                return block;
             }
         }
         Block temp = new Block(5, 5);
@@ -155,24 +156,24 @@ public class GameControl {
         if (direction == 1) {
             for (int j = 1; j < 5; j++) {
                 for (int j2 = 1; j2 < 5; j2++) {
-                    Block block_1 = getBlock(j2, j);
-                    if (block_1.value != 0) {//只尝试移动有数值的方块
+                    Block blockOne = getBlock(j2, j);
+                    if (blockOne.value != 0) {//只尝试移动有数值的方块
                         /*
                          * 下面一步应该能够跨越方块  比如向右的移动中
                          * 能从 2 0 0 4 的2直接移动成 0 0 2 4 的格局
                          * 实现一次性移动两格
                          * 下面这一句的功能是直接定位
                          */
-                        Block block_2 = getBlock(block_1, direction);
+                        Block blockTwo = getBlock(blockOne, direction);
                         //先交换一下，在处理
-                        if (!block_1.equals(block_2)) {
-                            exchange(block_1, block_2);//交换完成后主块变成block_2
+                        if (!blockOne.equals(blockTwo)) {
+                            exchange(blockOne, blockTwo);//交换完成后主块变成block_2
                             anyblockMove = true;
                         }
 
-                        Block temp = getBlock(block_2.x, block_2.y - 1);
-                        if (block_2.value == temp.value) {
-                            merge(block_2, temp, flag);
+                        Block temp = getBlock(blockTwo.x, blockTwo.y - 1);
+                        if (blockTwo.value == temp.value) {
+                            merge(blockTwo, temp, flag);
                             anyblockMove = true;
                         }
                     }
@@ -183,17 +184,17 @@ public class GameControl {
         if (direction == 2) {
             for (int j = 4; j > 0; j--) {
                 for (int j2 = 1; j2 < 5; j2++) {
-                    Block block_1 = getBlock(j2, j);
-                    if (block_1.value != 0) {//只尝试移动有数值的方块
-                        Block block_2 = getBlock(block_1, direction);
-                        if (!block_1.equals(block_2)) {
-                            exchange(block_1, block_2);//交换完成后主块变成block_2
+                    Block blockOne = getBlock(j2, j);
+                    if (blockOne.value != 0) {//只尝试移动有数值的方块
+                        Block blockTwo = getBlock(blockOne, direction);
+                        if (!blockOne.equals(blockTwo)) {
+                            exchange(blockOne, blockTwo);//交换完成后主块变成block_2
                             anyblockMove = true;
                         }
 
-                        Block temp = getBlock(block_2.x, block_2.y + 1);
-                        if (block_2.value == temp.value) {
-                            merge(block_2, temp, flag);
+                        Block temp = getBlock(blockTwo.x, blockTwo.y + 1);
+                        if (blockTwo.value == temp.value) {
+                            merge(blockTwo, temp, flag);
                             anyblockMove = true;
                         }
                     }
@@ -204,17 +205,17 @@ public class GameControl {
         if (direction == 4) {
             for (int j = 4; j > 0; j--) {
                 for (int j2 = 1; j2 < 5; j2++) {
-                    Block block_1 = getBlock(j, j2);
-                    if (block_1.value != 0) {//只尝试移动有数值的方块
-                        Block block_2 = getBlock(block_1, direction);
-                        if (!block_1.equals(block_2)) {
-                            exchange(block_1, block_2);//交换完成后主块变成block_2
+                    Block blockOne = getBlock(j, j2);
+                    if (blockOne.value != 0) {//只尝试移动有数值的方块
+                        Block blockTwo = getBlock(blockOne, direction);
+                        if (!blockOne.equals(blockTwo)) {
+                            exchange(blockOne, blockTwo);//交换完成后主块变成block_2
                             anyblockMove = true;
                         }
 
-                        Block temp = getBlock(block_2.x + 1, block_2.y);
-                        if (block_2.value == temp.value) {
-                            merge(block_2, temp, flag);
+                        Block temp = getBlock(blockTwo.x + 1, blockTwo.y);
+                        if (blockTwo.value == temp.value) {
+                            merge(blockTwo, temp, flag);
                             anyblockMove = true;
                         }
                     }
@@ -225,17 +226,17 @@ public class GameControl {
         if (direction == 3) {
             for (int j = 1; j < 5; j++) {
                 for (int j2 = 1; j2 < 5; j2++) {
-                    Block block_1 = getBlock(j, j2);
-                    if (block_1.value != 0) {//只尝试移动有数值的方块
-                        Block block_2 = getBlock(block_1, direction);
-                        if (!block_1.equals(block_2)) {
-                            exchange(block_1, block_2);//交换完成后主块变成block_2
+                    Block blockOne = getBlock(j, j2);
+                    if (blockOne.value != 0) {//只尝试移动有数值的方块
+                        Block blockTwo = getBlock(blockOne, direction);
+                        if (!blockOne.equals(blockTwo)) {
+                            exchange(blockOne, blockTwo);//交换完成后主块变成block_2
                             anyblockMove = true;
                         }
 
-                        Block temp = getBlock(block_2.x - 1, block_2.y);
-                        if (block_2.value == temp.value) {
-                            merge(block_2, temp, flag);
+                        Block temp = getBlock(blockTwo.x - 1, blockTwo.y);
+                        if (blockTwo.value == temp.value) {
+                            merge(blockTwo, temp, flag);
                             anyblockMove = true;
                         }
                     }

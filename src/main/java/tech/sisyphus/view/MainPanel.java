@@ -1,12 +1,12 @@
-package view;
+package tech.sisyphus.view;
 
-import config.Config;
-import config.Recorder;
-import controller.GameControl;
-import controller.Robot;
-import model.Block;
-import util.CommonUtil;
-import util.DraggablePanel;
+import tech.sisyphus.config.Config;
+import tech.sisyphus.config.Recorder;
+import tech.sisyphus.controller.GameControl;
+import tech.sisyphus.controller.Robot;
+import tech.sisyphus.model.Block;
+import tech.sisyphus.util.CommonUtil;
+import tech.sisyphus.util.DraggablePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,29 +20,29 @@ import java.util.Date;
 /*
  * 简单的2048游戏
  */
-public class Panel2048 extends DraggablePanel implements KeyListener {
-	boolean gameover, success;//标志游戏是否开始
-	public ArrayList<Block> blocks = new ArrayList<Block>();
-	private Robot robot = new Robot(this);//模拟自动运行
-	public GameControl control = new GameControl(this);
+public class MainPanel extends DraggablePanel implements KeyListener {
+    boolean gameover, success;//标志游戏是否开始
+    public ArrayList<Block> blocks = new ArrayList<Block>();
+    private Robot robot = new Robot(this);//模拟自动运行
+    public GameControl control = new GameControl(this);
 
-	Date startDate;
-	private Stats_Frame sf;
+    Date startDate;
+    private StatusBar sf;
 
-	public Panel2048() {
-		addKeyListener(this);
-	}
+    public MainPanel() {
+        addKeyListener(this);
+    }
 
-	//游戏初始化工作在这里 
-	public void game_init() {
-		gameover = false;
-		success = false;
-		startDate = new Date();
+    //游戏初始化工作在这里
+    public void game_init() {
+        gameover = false;
+        success = false;
+        startDate = new Date();
 
-		if (sf == null) {
-			sf = new Stats_Frame(this);
-			new Thread(sf.stats_Panel).start();
-		}
+        if (sf == null) {
+            sf = new StatusBar(this);
+            new Thread(sf.statsPanel).start();
+        }
 		init_block();
 		removeAll();
 		if (Config.AUTORUN && !robot.isAlive()) {

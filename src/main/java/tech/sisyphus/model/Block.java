@@ -1,6 +1,6 @@
-package model;
+package tech.sisyphus.model;
 
-import config.Config;
+import tech.sisyphus.config.Config;
 
 import java.awt.*;
 
