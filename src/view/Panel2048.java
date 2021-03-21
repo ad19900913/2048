@@ -1,8 +1,15 @@
 package view;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import config.Config;
+import config.Recorder;
+import controller.GameControl;
+import controller.Robot;
+import model.Block;
+import util.CommonUtil;
+import util.DraggablePanel;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -10,38 +17,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-
-import config.Config;
-import config.Recorder;
-import controller.GameControl;
-import controller.Robot;
-import model.Block;
-import util.CommonUtil;
-import util.GamePanel;
 /*
- * ¼òµ¥µÄ2048ÓÎÏ·
+ * ç®€å•çš„2048æ¸¸æˆ
  */
-public class Panel2048 extends GamePanel implements KeyListener{
-	boolean gameover,success;//±êÖ¾ÓÎÏ·ÊÇ·ñ¿ªÊ¼
+public class Panel2048 extends DraggablePanel implements KeyListener {
+	boolean gameover, success;//æ ‡å¿—æ¸¸æˆæ˜¯å¦å¼€å§‹
 	public ArrayList<Block> blocks = new ArrayList<Block>();
-	private Robot robot=new Robot(this);//Ä£Äâ×Ô¶¯ÔËĞĞ
+	private Robot robot = new Robot(this);//æ¨¡æ‹Ÿè‡ªåŠ¨è¿è¡Œ
 	public GameControl control = new GameControl(this);
-	
+
 	Date startDate;
 	private Stats_Frame sf;
-	
-	public Panel2048(){
-		addKeyListener(this);	
+
+	public Panel2048() {
+		addKeyListener(this);
 	}
-	
-	//ÓÎÏ·³õÊ¼»¯¹¤×÷ÔÚÕâÀï 
-	public void game_init(){
-		gameover=false;
-		success=false;
-		startDate=new Date();
-		
+
+	//æ¸¸æˆåˆå§‹åŒ–å·¥ä½œåœ¨è¿™é‡Œ 
+	public void game_init() {
+		gameover = false;
+		success = false;
+		startDate = new Date();
+
 		if (sf == null) {
 			sf = new Stats_Frame(this);
 			new Thread(sf.stats_Panel).start();
@@ -49,18 +46,18 @@ public class Panel2048 extends GamePanel implements KeyListener{
 		init_block();
 		removeAll();
 		if (Config.AUTORUN && !robot.isAlive()) {
-			//×Ô¶¯ÔËĞĞ
+			//è‡ªåŠ¨è¿è¡Œ
 			robot.start();
 		}
 	}
 
 	/**
-	 * ³õÊ¼»¯¸ñ¾Ö£¬¿ÉÒÔÊÇÈ«ĞÂ¸ñ¾Ö£¬Ò²¿ÉÒÔ×Ô¶¨Òå¸ñ¾Ö£¬±ãÓÚµ÷ÊÔ
+	 * åˆå§‹åŒ–æ ¼å±€ï¼Œå¯ä»¥æ˜¯å…¨æ–°æ ¼å±€ï¼Œä¹Ÿå¯ä»¥è‡ªå®šä¹‰æ ¼å±€ï¼Œä¾¿äºè°ƒè¯•
 	 */
 	private void init_block() {
 		if (Config.CASE_NEW) {
 			blocks = new ArrayList<Block>();
-			//³õÊ¼»¯16¸ö¿Õ°×·½¿é,³õÊ¼»¯Ò»¸ö´øÊıÖµµÄ·½¿é
+			//åˆå§‹åŒ–16ä¸ªç©ºç™½æ–¹å—,åˆå§‹åŒ–ä¸€ä¸ªå¸¦æ•°å€¼çš„æ–¹å—
 			for (int i = 1; i < 5; i++) {
 				for (int j = 1; j < 5; j++) {
 					Block block = new Block(i, j);
@@ -69,47 +66,47 @@ public class Panel2048 extends GamePanel implements KeyListener{
 					}
 					blocks.add(block);
 				}
-			} 
-		}else{
-			int [][] arr = new int [][]{{2,0,0,0},
-										{2,2,4,8},
-										{4,0,0,0},
-										{8,0,0,0}};
-				blocks = (ArrayList<Block>) CommonUtil.arr2list(arr);
+			}
+		} else {
+			int[][] arr = new int[][]{{2, 0, 0, 0},
+					{2, 2, 4, 8},
+					{4, 0, 0, 0},
+					{8, 0, 0, 0}};
+			blocks = (ArrayList<Block>) CommonUtil.arr2list(arr);
 		}
 	}
-	
-	//ÅĞ¶ÏÓÎÏ·µ±Ç°×´Ì¬  ÊÇÕıÔÚÓÎÏ·  »¹ÊÇÓÎÏ·Ê§°Ü  »òÕß³É¹¦
-	public void judge_game_state(){
+
+	//åˆ¤æ–­æ¸¸æˆå½“å‰çŠ¶æ€  æ˜¯æ­£åœ¨æ¸¸æˆ  è¿˜æ˜¯æ¸¸æˆå¤±è´¥  æˆ–è€…æˆåŠŸ
+	public void judge_game_state() {
 		for (Block block : blocks) {
-			if(block.value==2048){
-				success=true;
+			if (block.value == 2048) {
+				success = true;
 				return;
 			}
 		}
 	}
-	
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
+
 		g.setColor(new Color(0, 0, 0));
 		g.fillRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT);
 		//judge_game_state();
-		//»­³öÃ¿¸ö·½¿é
+		//ç”»å‡ºæ¯ä¸ªæ–¹å—
 		for (int i = 0; i < blocks.size(); i++) {
 			blocks.get(i).draw(g);
 		}
-		
-		if(gameover){
+
+		if (gameover) {
 			g.setColor(Color.black);
-			g.setFont(new Font("Î¢ÈíÑÅºÚ", Font.BOLD, 40));
+			g.setFont(new Font("å®‹ä½“", Font.BOLD, 40));
 			g.drawString("GAME OVER", 200, 200);
 		}
 		
-		if(success){
+		if(success) {
 			g.setColor(Color.black);
-			g.setFont(new Font("Î¢ÈíÑÅºÚ", Font.BOLD, 40));
+			g.setFont(new Font("å®‹ä½“", Font.BOLD, 40));
 			g.drawString("YOU WIN", 200, 200);
 		}
 		
@@ -123,17 +120,17 @@ public class Panel2048 extends GamePanel implements KeyListener{
 		if(e.getSource().equals(setup)){
 			
 		}
-		if(e.getSource().equals(about)){
-			JTextArea jta =new JTextArea();
-			jta.setFont(new Font("Î¢ÈíÑÅºÚ", Font.BOLD, 24));
-			jta.setText("ÓÎÏ·ÖĞ°´Q¼üÍË³öÓÎÏ·\r\n"
-					   +"°´F¼üÒş²Ø»òÏÔÊ¾¼Æ·ÖÌõ\r\n"
-					   +"°´R¼ü¿ªÆôÒ»¾ÖĞÂÓÎÏ·\r\n"
-					   +"W¡¢A¡¢S¡¢DÎª¿ØÖÆ¼ü\r\n"
-					   );
+		if(e.getSource().equals(about)) {
+			JTextArea jta = new JTextArea();
+			jta.setFont(new Font("å®‹ä½“", Font.BOLD, 24));
+			jta.setText("æ¸¸æˆä¸­æŒ‰Qé”®é€€å‡ºæ¸¸æˆ\r\n"
+					+ "æŒ‰Fé”®éšè—æˆ–æ˜¾ç¤ºè®¡åˆ†æ¡\r\n"
+					+ "æŒ‰Ré”®å¼€å¯ä¸€å±€æ–°æ¸¸æˆ\r\n"
+					+ "Wã€Aã€Sã€Dä¸ºæ§åˆ¶é”®\r\n"
+			);
 			jta.setSize(150, 250);
 			jta.setEditable(false);
-			JOptionPane.showConfirmDialog(this, jta, "¹ØÓÚ", JOptionPane.CLOSED_OPTION,2);
+			JOptionPane.showConfirmDialog(this, jta, "å…³äº", JOptionPane.CLOSED_OPTION, 2);
 		}
 		if(e.getSource().equals(exit)){
 			System.exit(0);
@@ -154,11 +151,11 @@ public class Panel2048 extends GamePanel implements KeyListener{
 		if(e.getKeyChar()=='d'){
 			next(4);
 		}
-		if(e.getKeyChar()=='f'){
-			//ÊµÏÖµ¯³öÍ³¼Æ´°¿Ú
-			if(sf.isVisible()){
+		if(e.getKeyChar() == 'f') {
+			//å®ç°å¼¹å‡ºç»Ÿè®¡çª—å£
+			if (sf.isVisible()) {
 				sf.setVisible(false);
-			}else{
+			} else {
 				sf.setVisible(true);
 			}
 		}
@@ -171,12 +168,13 @@ public class Panel2048 extends GamePanel implements KeyListener{
 			}
 			repaint();
 		}
-		if(e.getKeyChar()=='q'){
+		if (e.getKeyChar() == 'q') {
 			System.exit(0);
 		}
-		
+
 	}
 
+	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			robot.isRunning = !robot.isRunning;
@@ -184,12 +182,13 @@ public class Panel2048 extends GamePanel implements KeyListener{
 	}
 
 	public void next(int direction) {
-		control.move(direction, true);//È·¶¨·½Ïòºó´¦Àí
-		control.setBlock(control.anyblock_move);//Éú³ÉĞÂµÄËæ»ú¿é
+		control.move(direction, true);//ç¡®å®šæ–¹å‘åå¤„ç†
+		control.setBlock(control.anyblockMove);//ç”Ÿæˆæ–°çš„éšæœºå—
 		Recorder.S_MOVE_TIMES++;
-		repaint();//ÖØ»­
+		repaint();//é‡ç”»
 	}
-	
+
+	@Override
 	public void keyReleased(KeyEvent e) {}
 
 	

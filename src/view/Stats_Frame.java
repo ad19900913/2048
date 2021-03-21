@@ -1,36 +1,32 @@
 package view;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.util.Date;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
 import config.Config;
 import config.Recorder;
 
-public class Stats_Frame extends JFrame{
-	
-	Panel2048 p2;
-	Stats_Panel stats_Panel;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Date;
 
-	class Stats_Panel extends JPanel implements Runnable{
+public class Stats_Frame extends JFrame {
 
-		@Override
-		protected void paintComponent(Graphics g) {
-			// TODO Auto-generated method stub
-			super.paintComponent(g);
-			
-			g.setColor(new Color(187, 173, 160));
-			g.fillRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT/10);
-			
-			g.setColor(Color.black);
-			g.setFont(new Font("Œ¢»Ì—≈∫⁄",Font.BOLD,20));
-			
-			g.drawString("≥¢ ‘“∆∂Ø:"+Recorder.S_MOVE_TIMES+"  ”––ß“∆∂Ø:"+Recorder.S_USEFULL_MOVE_TIMES+"  ∑÷ ˝:"+Recorder.S_SCORES+"  ”√ ±:"+Recorder.S_PLAY_TIMES+"√Î", 0, 25);
-		}
+    Panel2048 p2;
+    Stats_Panel stats_Panel;
+
+    class Stats_Panel extends JPanel implements Runnable {
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            // TODO Auto-generated method stub
+            super.paintComponent(g);
+
+            g.setColor(new Color(187, 173, 160));
+            g.fillRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT / 10);
+
+            g.setColor(Color.black);
+            g.setFont(new Font("ÂÆã‰Ωì", Font.BOLD, 20));
+
+            g.drawString("Â∞ùËØïÁßªÂä®:" + Recorder.S_MOVE_TIMES + "  ÊúâÊïàÁßªÂä®:" + Recorder.S_USEFULL_MOVE_TIMES + "  ÂàÜÊï∞:" + Recorder.S_SCORES + "  Áî®Êó∂:" + Recorder.S_PLAY_TIMES + "Áßí", 0, 25);
+        }
 
 		@Override
 		public void run() {

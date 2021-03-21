@@ -1,60 +1,60 @@
 package config;
 
-import java.io.IOException;
-
 import util.FileUtil;
+
+import java.io.IOException;
 
 public class Recorder {
 	/**
-	 * µ¥¾ÖÓÎÏ·-ÓĞĞ§ÒÆ¶¯´ÎÊı
+	 * å•å±€æ¸¸æˆ-æœ‰æ•ˆç§»åŠ¨æ¬¡æ•°
 	 */
 	public static int S_USEFULL_MOVE_TIMES = 0;
 	/**
-	 * µ¥¾ÖÓÎÏ·-×ÜÒÆ¶¯´ÎÊı
+	 * å•å±€æ¸¸æˆ-æ€»ç§»åŠ¨æ¬¡æ•°
 	 */
 	public static int S_MOVE_TIMES = 0;
 	/**
-	 * µ¥¾ÖÓÎÏ·-µÃ·Ö 
+	 * å•å±€æ¸¸æˆ-å¾—åˆ† 
 	 */
 	public static int S_SCORES = 0;
 	/**
-	 * µ¥¾ÖÓÎÏ·-ÓÎÏ·Ê±¼ä
+	 * å•å±€æ¸¸æˆ-æ¸¸æˆæ—¶é—´
 	 */
 	public static int S_PLAY_TIMES = 0;
 	/**
-	 * µ¥¾ÖÓÎÏ·-×î´óÊı
+	 * å•å±€æ¸¸æˆ-æœ€å¤§æ•°
 	 */
 	public static int S_MAX_NUM = 0;
 	/**
-	 * Í³¼Æ-×î´óÊı
+	 * ç»Ÿè®¡-æœ€å¤§æ•°
 	 */
 	public static int T_MAX_NUM = 0;
 	/**
-	 * Í³¼Æ-×ÜµÃ·Ö
+	 * ç»Ÿè®¡-æ€»å¾—åˆ†
 	 */
 	public static int T_SCORES = 0;
-	/** 
-	 * Í³¼Æ-Æ½¾ùµÃ·Ö
+	/**
+	 * ç»Ÿè®¡-å¹³å‡å¾—åˆ†
 	 */
 	public static int T_AVERAGE_SCORES = 0;
 	/**
-	 * Í³¼Æ-×îĞ¡µÃ·Ö
+	 * ç»Ÿè®¡-æœ€å°å¾—åˆ†
 	 */
 	public static int T_MIN_SCORES = 0;
 	/**
-	 * Í³¼Æ-×î´óµÃ·Ö
+	 * ç»Ÿè®¡-æœ€å¤§å¾—åˆ†
 	 */
 	public static int T_MAX_SCORES = 0;
 	/**
-	 * µ±Ç°ÔËĞĞ´ÎÊı
+	 * å½“å‰è¿è¡Œæ¬¡æ•°
 	 */
 	public static int T_RUN_NUM = 0;
 	/**
-	 * ×î´óÔËĞĞ´ÎÊı
+	 * æœ€å¤§è¿è¡Œæ¬¡æ•°
 	 */
 	public static int T_MAX_RUN_NUM = 50;
 	/**
-	 * ÓÎÏ·³É¹¦´ÎÊı
+	 * æ¸¸æˆæˆåŠŸæ¬¡æ•°
 	 */
 	public static int T_SUCCESS_NUM = 0;
 	

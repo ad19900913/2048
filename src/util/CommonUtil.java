@@ -1,14 +1,11 @@
 package util;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import model.Block;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
-import model.Block;
 
 public class CommonUtil {
 	
@@ -33,9 +30,9 @@ public class CommonUtil {
 		}
 		return blocks;
 	}
-	
-	//µÃµ½cloneµÄ¼¯ºÏ
-	public static List<Block> getCloneList(List<Block> blocks){
+
+	//å¾—åˆ°cloneçš„é›†åˆ
+	public static List<Block> getCloneList(List<Block> blocks) {
 		ArrayList<Block> temp = new ArrayList<Block>();
 		for (int i = 0; i < blocks.size(); i++) {
 			Block block = blocks.get(i);
@@ -47,14 +44,12 @@ public class CommonUtil {
 		}
 		return temp;
 	}
-	
-	public static Image GetImage(String path){
-		Image image = t.getImage(path);
-		return image;
+
+	public static Image getImage(String path) {
+		return t.getImage(path);
 	}
-	
-	public static Icon GetIcon(String path){
-		Icon icon = new ImageIcon(path);
-		return icon;
+
+	public static Icon getIcon(String path) {
+		return new ImageIcon(path);
 	}
 }

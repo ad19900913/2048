@@ -1,29 +1,32 @@
 package controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import config.Config;
 import config.Recorder;
 import model.Block;
 import util.CommonUtil;
-import util.FileUtil;
 import util.GameScorer;
 import util.Node;
 import view.Panel2048;
 
-public class Robot extends Thread{
-	//ÊÇ·ñ´¦ÓÚÔËĞĞ×´Ì¬
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class Robot extends Thread {
+	//æ˜¯å¦å¤„äºè¿è¡ŒçŠ¶æ€
 	public boolean isRunning = true;
 	private Panel2048 panel;
 	private GameScorer scorer = new GameScorer();
 	private ArrayList<Block> original = new ArrayList<Block>();
 	private Node max;
 	private double value;
+
 	@Override
-	public void run(){
+	public void run() {
 		while (true) {
-			try {sleep(Config.AUTORUN_SLEEP_TIME);} catch (InterruptedException e) {}
+			try {
+				sleep(Config.AUTORUN_SLEEP_TIME);
+			} catch (InterruptedException e) {
+			}
 			if (isRunning) {
 				Node node = new Node(0, 0, null);
 				original = (ArrayList<Block>) CommonUtil.getCloneList(panel.blocks);
@@ -31,7 +34,7 @@ public class Robot extends Thread{
 				int direction = getDirection(node);
 
 				if (direction == 0) {
-//					FileUtil.append("ÒÆ¶¯:" + Recorder.USEFULL_MOVE_TIMES + "\tµÃ·Ö:" + Recorder.SCORES + "\t×î´óÊı:" + Recorder.MAX_NUM);
+//					FileUtil.append("ç§»åŠ¨:" + Recorder.USEFULL_MOVE_TIMES + "\tå¾—åˆ†:" + Recorder.SCORES + "\tæœ€å¤§æ•°:" + Recorder.MAX_NUM);
 					panel.game_init();
 					try {
 						Recorder.init();
@@ -39,14 +42,14 @@ public class Robot extends Thread{
 						e.printStackTrace();
 					}
 					panel.repaint();
-				}else{
+				}else {
 					panel.blocks = original;
 					panel.control.move(direction, true);
 					Recorder.S_MOVE_TIMES++;
-					if (panel.control.anyblock_move) {
+					if (panel.control.anyblockMove) {
 						Recorder.S_USEFULL_MOVE_TIMES++;
 					}
-					panel.control.setBlock(panel.control.anyblock_move);
+					panel.control.setBlock(panel.control.anyblockMove);
 					panel.repaint();
 				}
 				max = null;
@@ -54,14 +57,16 @@ public class Robot extends Thread{
 			}
 		}
 	}
+
 	/**
-	 * ¹¹Ôì¸ñ¾ÖÊ÷
+	 * æ„é€ æ ¼å±€æ ‘
+	 *
 	 * @param parent
 	 * @param deep
 	 * @param blocks
 	 */
 	private void generateTree(Node parent, int deep, ArrayList<Block> blocks) {
-		//ËÑË÷Éî¶È+1
+		//æœç´¢æ·±åº¦+1
 		deep++;
 		if (deep > Config.DEEP) {
 			return;
@@ -70,34 +75,35 @@ public class Robot extends Thread{
 			for (int i = 1; i < 5; i++) {
 				panel.control.move(i, false);
 				double d;
-				if (panel.control.anyblock_move) {
+				if (panel.control.anyblockMove) {
 					d = scorer.getScore(panel.blocks);
 					Node child = new Node(i, d, parent);
 					parent.children.add(child);
-					panel.control.setBlock(panel.control.anyblock_move);
+					panel.control.setBlock(panel.control.anyblockMove);
 					generateTree(child, deep, panel.blocks);
-				}else{
+				} else {
 					continue;
 				}
 				panel.blocks = (ArrayList<Block>) CommonUtil.getCloneList(blocks);
 			}
 		}
 	}
+
 	/**
-	 * »ñµÃ×î¼ÑĞĞ¶¯·½Ïò
+	 * è·å¾—æœ€ä½³è¡ŒåŠ¨æ–¹å‘
 	 * @param node
 	 * @return
 	 */
-	private int getDirection(Node node){
-		//»ñÈ¡value×î´óµÄÒ¶×Ó½Úµã
+	private int getDirection(Node node) {
+		//è·å–valueæœ€å¤§çš„å¶å­èŠ‚ç‚¹
 		dfs(node);
 		if (max != null) {
-			//ÓÉÒ¶×Ó½Úµã»ñÈ¡ĞĞ¶¯·½Ïò
+			//ç”±å¶å­èŠ‚ç‚¹è·å–è¡ŒåŠ¨æ–¹å‘
 			while (max.parent.parent != null) {
 				max = max.parent;
 			}
 			return max.key;
-		}else{ 
+		} else{
 			return 0;
 		}
 	}

@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
-	
-	public int key;//·½Ïò
-	public double value;//ÆÀ·Ö
-	public List<Node> children;//×Ó½Úµã
+
+	public int key;//æ–¹å‘
+	public double value;//è¯„åˆ†
+	public List<Node> children;//å­èŠ‚ç‚¹
 	public double alpha;
 	public double beta;
 	public Node parent;
+
 	public Node(int key, double value, Node parent) {
 		super();
 		this.key = key;

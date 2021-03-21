@@ -2,74 +2,72 @@ package config;
 
 import java.io.IOException;
 
-import util.FileUtil;
-
 public class Config {
 	/**
-	 * ´°¿Ú¿í¶È
+	 * çª—å£å®½åº¦
 	 */
-	public static final int GAME_WIDTH=400;
+	public static final int GAME_WIDTH= 400;
 	/**
-	 * ´°¿Ú¸ß¶È
+	 * çª—å£é«˜åº¦
 	 */
-	public static final int GAME_HEIGHT=400;
+	public static final int GAME_HEIGHT= 400;
 	/**
-	 * ÔÚÆÁÄ»±ßÔµÒş²ØÊ±Â¶³öµÄÏñËØ
+	 * åœ¨å±å¹•è¾¹ç¼˜éšè—æ—¶éœ²å‡ºçš„åƒç´ 
 	 */
-	public static final int SHOW_PIXELS=5;
+	public static final int SHOW_PIXELS = 5;
 	/**
-	 * ĞİÃßÊ±¼ä
+	 * ä¼‘çœ æ—¶é—´
 	 */
-	public static final int SLEEP_TIME=5;
+	public static final int SLEEP_TIME = 5;
 	/**
-	 * ×Ô¶¯ÔËĞĞ¼ä¸ôÊ±¼ä
+	 * è‡ªåŠ¨è¿è¡Œé—´éš”æ—¶é—´
 	 */
-	public static final int AUTORUN_SLEEP_TIME=1;
-	//¶¨ÒåÖ÷Ò³Ãæ°´Å¥´óĞ¡µÄ³£Á¿
-	public static final int MENU_GAP=GAME_HEIGHT/9,MENU_WIDTH=GAME_WIDTH/3,MENU_HEIGHT=GAME_HEIGHT/10;
+	public static final int AUTORUN_SLEEP_TIME = 1;
+	//å®šä¹‰ä¸»é¡µé¢æŒ‰é’®å¤§å°çš„å¸¸é‡
+	public static final int MENU_GAP = GAME_HEIGHT / 9, MENU_WIDTH = GAME_WIDTH / 3, MENU_HEIGHT = GAME_HEIGHT / 10;
 	/**
-	 * ×Ô¶¯ÔËĞĞ
+	 * è‡ªåŠ¨è¿è¡Œ
 	 */
 	public static final boolean AUTORUN = true;
 	/**
-	 * ³õÊ¼»¯¸ñ¾ÖÀàĞÍ£¬trueÎªÈ«ĞÂ¸ñ¾Ö£¬falseÎª×Ô¶¨Òå
+	 * åˆå§‹åŒ–æ ¼å±€ç±»å‹ï¼Œtrueä¸ºå…¨æ–°æ ¼å±€ï¼Œfalseä¸ºè‡ªå®šä¹‰
 	 */
 	public static final boolean CASE_NEW = true;
 	/**
-	 * ×Ô¶¯ËÑË÷Éî¶È
+	 * è‡ªåŠ¨æœç´¢æ·±åº¦
 	 */
 	public static final int DEEP = 8;
 	/**
-	 *  ´°¿Ú¿É¼ûĞÔ
+	 * çª—å£å¯è§æ€§
 	 */
 	public static final boolean ALWAYS_ON_TOP = false;
 	/**
-	 * µ¥µ÷ĞÔ
+	 * æ—¥å¿—æ–‡ä»¶
+	 */
+	public static final String LOG_FILE = "C:/Users/Captain/Desktop/2048.log";
+	/**
+	 * å•è°ƒæ€§
 	 */
 	public static int MONOTONICITY = 60;
 	/**
-	 * Æ½»¬ĞÔ
+	 * å¹³æ»‘æ€§
 	 */
 	public static int SMOOTHNESS = 0;
 	/**
-	 * ¿ÕÏĞĞÔ
+	 * ç©ºé—²æ€§
 	 */
 	public static int FREETILES = 40;
 	/**
-	 * ×Ü·Ö
+	 * æ€»åˆ†
 	 */
 	public static int TOTAL = 100;
 	/**
-	 * ¼ä¸ô
+	 * é—´éš”
 	 */
 	public static int GAP = 5;
-	/**
-	 * ÈÕÖ¾ÎÄ¼ş
-	 */
-	public static final String LOG_FILE = "C:/Users/Captain/Desktop/2048.log";
 	
 	/**
-	 * µ÷Õû²ÎÊı
+	 * è°ƒæ•´å‚æ•°
 	 * @throws IOException 
 	 */
 	public static void improveArgs() throws IOException {

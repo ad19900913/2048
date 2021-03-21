@@ -1,25 +1,25 @@
 package util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import config.Config;
 import model.Block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * ÆÀ¼Ûº¯Êı
- * @author user
+ * è¯„ä»·å‡½æ•°
  *
+ * @author user
  */
 public class GameScorer {
-	
-	//µ¥µ÷ĞÔ
-	private double getmonotonicity(List<Block> blocks){
-		Block [][] arr = CommonUtil.list2arr(blocks);
+
+	//å•è°ƒæ€§
+	private double getmonotonicity(List<Block> blocks) {
+		Block[][] arr = CommonUtil.list2arr(blocks);
 		double count = 0;
 		double temp = 1;
 		double all = 64;
-		//ºáÏò¼ÆËã
+		//æ¨ªå‘è®¡ç®—
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < arr.length - 1; j++) {
 				Block block1 = arr[i][j];
@@ -28,14 +28,14 @@ public class GameScorer {
 				if (block1.value == 0 || block2.value == 0) {
 					d = 1;
 				} else {
-					d = (double)block1.value / (double)block2.value;
+					d = (double) block1.value / (double) block2.value;
 				}
 				temp *= d;
 			}
 			count += temp;
 			temp = 1;
 		}
-		//×İÏò¼ÆËã
+		//çºµå‘è®¡ç®—
 		for (int i = 0; i < arr.length - 1; i++) {
 			for (int j = 0; j < arr.length; j++) {
 				Block block1 = arr[i][j];
@@ -44,48 +44,48 @@ public class GameScorer {
 				if (block1.value == 0 || block2.value == 0) {
 					d = 1;
 				} else {
-					d = (double)block1.value / (double)block2.value;
+					d = (double) block1.value / (double) block2.value;
 				}
 				temp *= d;
 			}
 			count += temp;
 			temp = 1;
 		}
-		return (count/all)*Config.MONOTONICITY;
+		return (count / all) * Config.MONOTONICITY;
 	}
-	
-	//Æ½»¬ĞÔ
-	private double getsmoothness(List<Block> blocks){
-		Block [][] arr = CommonUtil.list2arr(blocks);
+
+	//å¹³æ»‘æ€§
+	private double getsmoothness(List<Block> blocks) {
+		Block[][] arr = CommonUtil.list2arr(blocks);
 		double count = 0;
 		double all = 24;
-		//ºáÏò¼ÆËã
+		//æ¨ªå‘è®¡ç®—
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < arr.length - 1; j++) {
 				Block block1 = arr[i][j];
 				Block block2 = arr[i][j + 1];
-				double min = (double)Math.min(block1.value, block2.value);
-				double max = (double)Math.max(block1.value, block2.value) == 0 ? 1 : (double)Math.max(block1.value, block2.value);
+				double min = (double) Math.min(block1.value, block2.value);
+				double max = (double) Math.max(block1.value, block2.value) == 0 ? 1 : (double) Math.max(block1.value, block2.value);
 				double d = min / max;
 				count += d;
 			}
 		}
-		//×İÏò¼ÆËã
+		//çºµå‘è®¡ç®—
 		for (int i = 0; i < arr.length - 1; i++) {
 			for (int j = 0; j < arr.length; j++) {
 				Block block1 = arr[i][j];
 				Block block2 = arr[i + 1][j];
-				double min = (double)Math.min(block1.value, block2.value);
-				double max = (double)Math.max(block1.value, block2.value) == 0 ? 1 : (double)Math.max(block1.value, block2.value);
+				double min = (double) Math.min(block1.value, block2.value);
+				double max = (double) Math.max(block1.value, block2.value) == 0 ? 1 : (double) Math.max(block1.value, block2.value);
 				double d = min / max;
 				count += d;
 			}
 		}
-		return (count/all)*Config.SMOOTHNESS;
+		return (count / all) * Config.SMOOTHNESS;
 	}
-	
-	//¿ÕÏĞĞÔ
-	private double getfreetiles(List<Block> blocks){
+
+	//ç©ºé—²æ€§
+	private double getfreetiles(List<Block> blocks) {
 		double count = 0;
 		double all = 16;
 		for (int i = 0; i < blocks.size(); i++) {
@@ -93,7 +93,7 @@ public class GameScorer {
 				count++;
 			}
 		}
-		double d = (count/all)*Config.FREETILES;
+		double d = (count / all) * Config.FREETILES;
 		return d;
 	}
 	

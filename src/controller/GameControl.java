@@ -1,242 +1,247 @@
 package controller;
-import java.util.ArrayList;
-import java.util.List;
 
 import config.Recorder;
 import model.Block;
 import view.Panel2048;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
- * ·½¿éÒÆ¶¯Ê±µÄ²ßÂÔ   ·ÖÎªÁ½´ó²½1.¿çÔ½¿Õ°×¸ñ  2.ÈÚºÏ
- * ·½¿éBÏòÄ³¸ö·½ÏòÉÏÒÆ¶¯£¬Èç¹û¸Ã·½ÏòÉÏÏÂÒ»²½Îª¿Õ£¬Ôò»¥Ïà½»»»ÊıÖµ
- * 								     ÏÂÒ»²½Åöµ½±ß½ç£¬²»¶¯
- *                          	     ÏÂÒ»²½Åöµ½·½¿éÈç¹ûÊıÖµ²»Í¬£¬²»¶¯
- *                          				       Èç¹ûÊıÖµÏàÍ¬£¬ÈÚºÏ 
- *                         	 	  	
+ * æ–¹å—ç§»åŠ¨æ—¶çš„ç­–ç•¥   åˆ†ä¸ºä¸¤å¤§æ­¥1.è·¨è¶Šç©ºç™½æ ¼  2.èåˆ
+ * æ–¹å—Bå‘æŸä¸ªæ–¹å‘ä¸Šç§»åŠ¨ï¼Œå¦‚æœè¯¥æ–¹å‘ä¸Šä¸‹ä¸€æ­¥ä¸ºç©ºï¼Œåˆ™äº’ç›¸äº¤æ¢æ•°å€¼
+ * 								     ä¸‹ä¸€æ­¥ç¢°åˆ°è¾¹ç•Œï¼Œä¸åŠ¨
+ *                          	     ä¸‹ä¸€æ­¥ç¢°åˆ°æ–¹å—å¦‚æœæ•°å€¼ä¸åŒï¼Œä¸åŠ¨
+ *                          				       å¦‚æœæ•°å€¼ç›¸åŒï¼Œèåˆ
+ *
  */
 public class GameControl {
-	//ÒÆ¶¯·½Ïò
-	public int direction;
-	//ÊÇ·ñÓĞ·½¿éÒÆ¶¯
-	public boolean anyblock_move=false;
-	//±íÊ¾µ±Ç°×Ô¶¯Ìî³äÊı×ÖµÄ·½¿é×ø±ê£¬Ã¿´ÎÒÆ¶¯ºóË¢ĞÂ
-	private int x,y;
-	private Panel2048 panel_2048;
-	
-	public GameControl(Panel2048 panel_2048) {
-		super();
-		this.panel_2048 = panel_2048;
-	}
+    //ç§»åŠ¨æ–¹å‘
+    public int direction;
+    //æ˜¯å¦æœ‰æ–¹å—ç§»åŠ¨
+    public boolean anyblockMove = false;
+    //è¡¨ç¤ºå½“å‰è‡ªåŠ¨å¡«å……æ•°å­—çš„æ–¹å—åæ ‡ï¼Œæ¯æ¬¡ç§»åŠ¨ååˆ·æ–°
+    private int x, y;
+    private Panel2048 panel_2048;
 
-	/*
-	 * ´Ë·½·¨ÊÇºÏ·¨ÒÆ¶¯ºó²Å»áÖ´ĞĞµÄ
-	 * Èç¹ûÔÚ°´¼ü·½ÏòÉÏÃ»ÓĞÈÎºÎ·½¿é±»ÒÆ¶¯£¬Ôò²»»áÉú³ÉĞÂ·½¿é
-	 * flagÓÃÀ´±êÊ¶Õâ´ÎÒÆ¶¯ÊÇ²»ÊÇÓĞĞ§µÄÒÆ¶¯
-	 */
-	public boolean setBlock(boolean flag){
-		if (flag) {
-			List<Block> list = new ArrayList<Block>();
-			x = (int) (Math.random() * 4 + 1);
-			y = (int) (Math.random() * 4 + 1);
-			for (Block block : panel_2048.blocks) {
-				if (block.value == 0) {
-					list.add(block);
-				}
-			}
-			int index = (int) (Math.random() * list.size());
-			list.get(index).value = 2;
-			clearMergeFlag();
-			anyblock_move = false;
-			return true;
-		}
-		return false;	
-	}
-	
-	private void clearMergeFlag() {
-		for (Block block : panel_2048.blocks) {
-			block.canMerge = true;
-		}
-	}
+    public GameControl(Panel2048 panel_2048) {
+        super();
+        this.panel_2048 = panel_2048;
+    }
 
-	//½»»»µÄÊ±ºòÖ»ĞèÒª½»»»VALUE
-	public void exchange(Block b1,Block b2){
-			b2.value=b1.value;
-			b1.value=0;
-	}
-	
-	/**
-	 * b1Ïòb2ÈÚºÏ
-	 * µ«ÊÇÔÚÒ»´ÎÒÆ¶¯ÖĞ
-	 * Ã¿Ò»ĞĞ»òÕßÃ¿Ò»ÁĞÖ»ÄÜÓĞÒ»´ÎÈÚºÏ
-	 * @param b1
-	 * @param b2
-	 * @param flag	±ê¼Ç±¾´ÎÒÆ¶¯ÊÇ·ñ¼Æ·Ö
-	 */
-	public void merge(Block b1, Block b2, boolean flag){
-		
-		if(b1.canMerge && b2.canMerge ){
-			b1.canMerge = false;
-			b2.canMerge = false;
-			b1.value=0;
-			b2.value=2*b2.value;
-			if (flag) {
-				Recorder.S_MAX_NUM = Math.max(Recorder.S_MAX_NUM, b2.value);
-				Recorder.S_SCORES = Recorder.S_SCORES + b2.value;
-			}
-		}
-		
-	}
-	//ÕÒµ½ÏÂÒ»¿éÌØ¶¨×ø±êµÄ×©¿é£¬Óë·½ÏòÓĞ¹Ø
-	public Block getBlock(Block block,int dir){
-		int targetX=block.x;//ÓÃÀ´±êÊ¶ÒªÕÒµÄÄ¿±ê¿éµÄ×ø±ê
-		int targetY=block.y;
-			switch (dir) {
-			case 1:
-				while (getBlock(targetX, targetY-1).value==0) {
-					targetY-=1;
-					//½øÈëwhileÑ­»·ÒâÎ¶×Å·½¿éÖÁÉÙÒÆ¶¯ÁËÒ»´Î  
-					anyblock_move=true;
-				}
-				return getBlock(targetX, targetY);
-			case 2:
-				while (getBlock(targetX, targetY+1).value==0) {
-					targetY+=1;
-					anyblock_move=true;
-				}
-				return getBlock(targetX, targetY);
-			case 3:
-				while (getBlock(targetX-1, targetY).value==0) {
-					targetX-=1;
-					anyblock_move=true;
-				}
-				return getBlock(targetX, targetY);
-			case 4:
-				while (getBlock(targetX+1, targetY).value==0) {
-					targetX+=1;
-					anyblock_move=true;
-				}
-				return getBlock(targetX, targetY);
-			}
-		return null;
-	}
-	
-	//»ñÈ¡ÌØ¶¨×ø±êµÄBlock¶ÔÏó
-	public Block getBlock(int x,int y){
-		for (Block block_1 : panel_2048.blocks){
-			if (block_1.x==x&&block_1.y==y) {
-				return block_1;
-			}
-		}
-		Block temp=new Block(5, 5);
-		temp.value=100;
-		return temp;
-	}
-	
-	//´¦Àí·½¿éÔË¶¯µÄ·½·¨
-	public void move(int direction, boolean flag){
-		anyblock_move = false;
-		/*
-		 * ÏÂÃæÊÇ¶ÔÓÚÃ¿Ò»¸öÓĞÊı×ÖµÄ·½¿é½øĞĞ³¢ÊÔÒÆ¶¯
-		 * ÒªÊµÏÖÒ»´Î°´¼ü¿ÉÒÔÊ¹µÃ·½¿é´Ó×î×ó±ßÒÆ¶¯µ½×îÓÒ±ß£¬
-		 *  
-		 * ¶øÇÒĞèÒª×¢ÒâµÄÊÇ Ò»´ÎÓĞĞ§µÄÒÆ¶¯¹ı³ÌÖĞ  Ã¿Ò»ĞĞ»òÕßÃ¿Ò»ÁĞÉÏ×îºÃÖ»ÄÜÓĞÒ»´Î
-		 * ÊıÖµÏàÍ¬µÄÈÚºÏ£¬·ñÔòÓÎÏ·ÄÑ¶È»á½µµÍ¡£
-		 * ¾ÍÊÇ 2 2 4 8        ÒÆ¶¯ºóÓ¦¸Ã±ä³É
-		 *     0 4 4 8        ¶ø²»ÊÇÖ±½Ó±ä³É
-		 *     0 0 0 16
-		 *           
-		 */
-		//Èç¹ûÏòÉÏÒÆ¶¯£¬ÄÇÃ´ÊÇ´Ó×îÉÏÃæÒ»ĞĞ¿ªÊ¼ÖğĞĞÍùÏÂ¼ÆËã ·½¿éµÄÒÆ¶¯
-		if(direction==1){
-			for (int j = 1; j < 5; j++) {
-				for (int j2 = 1; j2 < 5; j2++) {
-					Block block_1=getBlock(j2, j);
-					if (block_1.value!=0) {//Ö»³¢ÊÔÒÆ¶¯ÓĞÊıÖµµÄ·½¿é
-						/*
-						 * ÏÂÃæÒ»²½Ó¦¸ÃÄÜ¹»¿çÔ½·½¿é  ±ÈÈçÏòÓÒµÄÒÆ¶¯ÖĞ  
-						 * ÄÜ´Ó 2 0 0 4 µÄ2Ö±½ÓÒÆ¶¯³É 0 0 2 4 µÄ¸ñ¾Ö 
-						 * ÊµÏÖÒ»´ÎĞÔÒÆ¶¯Á½¸ñ
-						 * ÏÂÃæÕâÒ»¾äµÄ¹¦ÄÜÊÇÖ±½Ó¶¨Î»
-						 */
-						Block block_2 = getBlock(block_1, direction);
-						//ÏÈ½»»»Ò»ÏÂ£¬ÔÚ´¦Àí
-						if (!block_1.equals(block_2)) {
-							exchange(block_1, block_2);//½»»»Íê³ÉºóÖ÷¿é±ä³Éblock_2
-							anyblock_move = true;
-						}
-						
-						Block temp=getBlock(block_2.x,block_2.y-1);
-						if (block_2.value == temp.value) {
-							merge(block_2, temp, flag);
-							anyblock_move = true;
-						}
-					}
-				}
-			}	
-		}
-		
-		if(direction==2){
-			for (int j = 4; j > 0; j--) {
-				for (int j2 = 1; j2 < 5; j2++) {
-					Block block_1=getBlock(j2, j);
-					if (block_1.value!=0) {//Ö»³¢ÊÔÒÆ¶¯ÓĞÊıÖµµÄ·½¿é
-						Block block_2 = getBlock(block_1, direction);
-						if (!block_1.equals(block_2)) {
-							exchange(block_1, block_2);//½»»»Íê³ÉºóÖ÷¿é±ä³Éblock_2
-							anyblock_move = true;
-						}
-						
-						Block temp=getBlock(block_2.x,block_2.y+1);
-						if (block_2.value == temp.value) {
-							merge(block_2, temp, flag);
-							anyblock_move = true;
-						}
-					}
-				}
-			}
-		}
-		
-		if(direction==4){
-			for (int j = 4; j > 0; j--) {
-				for (int j2 = 1; j2 < 5; j2++) {
-					Block block_1=getBlock(j, j2);
-					if (block_1.value!=0) {//Ö»³¢ÊÔÒÆ¶¯ÓĞÊıÖµµÄ·½¿é
-						Block block_2 = getBlock(block_1, direction);
-						if (!block_1.equals(block_2)) {
-							exchange(block_1, block_2);//½»»»Íê³ÉºóÖ÷¿é±ä³Éblock_2
-							anyblock_move = true;
-						}
-						
-						Block temp=getBlock(block_2.x+1,block_2.y);
-						if (block_2.value == temp.value) {
-							merge(block_2, temp, flag);
-							anyblock_move = true;
-						}
-					}
-				}
-			}
-		}
-		
-		if(direction==3){
-			for (int j = 1; j < 5; j++) {
-				for (int j2 = 1; j2 < 5; j2++) {
-					Block block_1=getBlock(j, j2);
-					if (block_1.value!=0) {//Ö»³¢ÊÔÒÆ¶¯ÓĞÊıÖµµÄ·½¿é
-						Block block_2 = getBlock(block_1, direction);
-						if (!block_1.equals(block_2)) {
-							exchange(block_1, block_2);//½»»»Íê³ÉºóÖ÷¿é±ä³Éblock_2
-							anyblock_move = true;
-						}
-						
-						Block temp=getBlock(block_2.x-1,block_2.y);
-						if (block_2.value == temp.value) {
-							merge(block_2, temp, flag);
-							anyblock_move = true;
-						}
-					}
-				}
-			}
-		}
-	}
-	
+    /*
+     * æ­¤æ–¹æ³•æ˜¯åˆæ³•ç§»åŠ¨åæ‰ä¼šæ‰§è¡Œçš„
+     * å¦‚æœåœ¨æŒ‰é”®æ–¹å‘ä¸Šæ²¡æœ‰ä»»ä½•æ–¹å—è¢«ç§»åŠ¨ï¼Œåˆ™ä¸ä¼šç”Ÿæˆæ–°æ–¹å—
+     * flagç”¨æ¥æ ‡è¯†è¿™æ¬¡ç§»åŠ¨æ˜¯ä¸æ˜¯æœ‰æ•ˆçš„ç§»åŠ¨
+     */
+    public boolean setBlock(boolean flag) {
+        if (flag) {
+            List<Block> list = new ArrayList<Block>();
+            x = (int) (Math.random() * 4 + 1);
+            y = (int) (Math.random() * 4 + 1);
+            for (Block block : panel_2048.blocks) {
+                if (block.value == 0) {
+                    list.add(block);
+                }
+            }
+            int index = (int) (Math.random() * list.size());
+            list.get(index).value = 2;
+            clearMergeFlag();
+            anyblockMove = false;
+            return true;
+        }
+        return false;
+    }
+
+    private void clearMergeFlag() {
+        for (Block block : panel_2048.blocks) {
+            block.canMerge = true;
+        }
+    }
+
+    //äº¤æ¢çš„æ—¶å€™åªéœ€è¦äº¤æ¢VALUE
+    public void exchange(Block b1, Block b2) {
+        b2.value = b1.value;
+        b1.value = 0;
+    }
+
+    /**
+     * b1å‘b2èåˆ
+     * ä½†æ˜¯åœ¨ä¸€æ¬¡ç§»åŠ¨ä¸­
+     * æ¯ä¸€è¡Œæˆ–è€…æ¯ä¸€åˆ—åªèƒ½æœ‰ä¸€æ¬¡èåˆ
+     *
+     * @param b1
+     * @param b2
+     * @param flag æ ‡è®°æœ¬æ¬¡ç§»åŠ¨æ˜¯å¦è®¡åˆ†
+     */
+    public void merge(Block b1, Block b2, boolean flag) {
+
+        if (b1.canMerge && b2.canMerge) {
+            b1.canMerge = false;
+            b2.canMerge = false;
+            b1.value = 0;
+            b2.value = 2 * b2.value;
+            if (flag) {
+                Recorder.S_MAX_NUM = Math.max(Recorder.S_MAX_NUM, b2.value);
+                Recorder.S_SCORES = Recorder.S_SCORES + b2.value;
+            }
+        }
+
+    }
+
+    //æ‰¾åˆ°ä¸‹ä¸€å—ç‰¹å®šåæ ‡çš„ç –å—ï¼Œä¸æ–¹å‘æœ‰å…³
+    public Block getBlock(Block block, int dir) {
+        int targetX = block.x;//ç”¨æ¥æ ‡è¯†è¦æ‰¾çš„ç›®æ ‡å—çš„åæ ‡
+        int targetY = block.y;
+        switch (dir) {
+            case 1:
+                while (getBlock(targetX, targetY - 1).value == 0) {
+                    targetY -= 1;
+                    //è¿›å…¥whileå¾ªç¯æ„å‘³ç€æ–¹å—è‡³å°‘ç§»åŠ¨äº†ä¸€æ¬¡
+                    anyblockMove = true;
+                }
+                return getBlock(targetX, targetY);
+            case 2:
+                while (getBlock(targetX, targetY + 1).value == 0) {
+                    targetY += 1;
+                    anyblockMove = true;
+                }
+                return getBlock(targetX, targetY);
+            case 3:
+                while (getBlock(targetX - 1, targetY).value == 0) {
+                    targetX -= 1;
+                    anyblockMove = true;
+                }
+                return getBlock(targetX, targetY);
+            case 4:
+                while (getBlock(targetX + 1, targetY).value == 0) {
+                    targetX += 1;
+                    anyblockMove = true;
+                }
+                return getBlock(targetX, targetY);
+            default:
+                return null;
+        }
+
+    }
+
+    //è·å–ç‰¹å®šåæ ‡çš„Blockå¯¹è±¡
+    public Block getBlock(int x, int y) {
+        for (Block block_1 : panel_2048.blocks) {
+            if (block_1.x == x && block_1.y == y) {
+                return block_1;
+            }
+        }
+        Block temp = new Block(5, 5);
+        temp.value = 100;
+        return temp;
+    }
+
+    //å¤„ç†æ–¹å—è¿åŠ¨çš„æ–¹æ³•
+    public void move(int direction, boolean flag) {
+        anyblockMove = false;
+        /*
+         * ä¸‹é¢æ˜¯å¯¹äºæ¯ä¸€ä¸ªæœ‰æ•°å­—çš„æ–¹å—è¿›è¡Œå°è¯•ç§»åŠ¨
+         * è¦å®ç°ä¸€æ¬¡æŒ‰é”®å¯ä»¥ä½¿å¾—æ–¹å—ä»æœ€å·¦è¾¹ç§»åŠ¨åˆ°æœ€å³è¾¹ï¼Œ
+         *
+         * è€Œä¸”éœ€è¦æ³¨æ„çš„æ˜¯ ä¸€æ¬¡æœ‰æ•ˆçš„ç§»åŠ¨è¿‡ç¨‹ä¸­  æ¯ä¸€è¡Œæˆ–è€…æ¯ä¸€åˆ—ä¸Šæœ€å¥½åªèƒ½æœ‰ä¸€æ¬¡
+         * æ•°å€¼ç›¸åŒçš„èåˆï¼Œå¦åˆ™æ¸¸æˆéš¾åº¦ä¼šé™ä½ã€‚
+         * å°±æ˜¯ 2 2 4 8        ç§»åŠ¨ååº”è¯¥å˜æˆ
+         *     0 4 4 8        è€Œä¸æ˜¯ç›´æ¥å˜æˆ
+         *     0 0 0 16
+         *
+         */
+        //å¦‚æœå‘ä¸Šç§»åŠ¨ï¼Œé‚£ä¹ˆæ˜¯ä»æœ€ä¸Šé¢ä¸€è¡Œå¼€å§‹é€è¡Œå¾€ä¸‹è®¡ç®— æ–¹å—çš„ç§»åŠ¨
+        if (direction == 1) {
+            for (int j = 1; j < 5; j++) {
+                for (int j2 = 1; j2 < 5; j2++) {
+                    Block block_1 = getBlock(j2, j);
+                    if (block_1.value != 0) {//åªå°è¯•ç§»åŠ¨æœ‰æ•°å€¼çš„æ–¹å—
+                        /*
+                         * ä¸‹é¢ä¸€æ­¥åº”è¯¥èƒ½å¤Ÿè·¨è¶Šæ–¹å—  æ¯”å¦‚å‘å³çš„ç§»åŠ¨ä¸­
+                         * èƒ½ä» 2 0 0 4 çš„2ç›´æ¥ç§»åŠ¨æˆ 0 0 2 4 çš„æ ¼å±€
+                         * å®ç°ä¸€æ¬¡æ€§ç§»åŠ¨ä¸¤æ ¼
+                         * ä¸‹é¢è¿™ä¸€å¥çš„åŠŸèƒ½æ˜¯ç›´æ¥å®šä½
+                         */
+                        Block block_2 = getBlock(block_1, direction);
+                        //å…ˆäº¤æ¢ä¸€ä¸‹ï¼Œåœ¨å¤„ç†
+                        if (!block_1.equals(block_2)) {
+                            exchange(block_1, block_2);//äº¤æ¢å®Œæˆåä¸»å—å˜æˆblock_2
+                            anyblockMove = true;
+                        }
+
+                        Block temp = getBlock(block_2.x, block_2.y - 1);
+                        if (block_2.value == temp.value) {
+                            merge(block_2, temp, flag);
+                            anyblockMove = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (direction == 2) {
+            for (int j = 4; j > 0; j--) {
+                for (int j2 = 1; j2 < 5; j2++) {
+                    Block block_1 = getBlock(j2, j);
+                    if (block_1.value != 0) {//åªå°è¯•ç§»åŠ¨æœ‰æ•°å€¼çš„æ–¹å—
+                        Block block_2 = getBlock(block_1, direction);
+                        if (!block_1.equals(block_2)) {
+                            exchange(block_1, block_2);//äº¤æ¢å®Œæˆåä¸»å—å˜æˆblock_2
+                            anyblockMove = true;
+                        }
+
+                        Block temp = getBlock(block_2.x, block_2.y + 1);
+                        if (block_2.value == temp.value) {
+                            merge(block_2, temp, flag);
+                            anyblockMove = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (direction == 4) {
+            for (int j = 4; j > 0; j--) {
+                for (int j2 = 1; j2 < 5; j2++) {
+                    Block block_1 = getBlock(j, j2);
+                    if (block_1.value != 0) {//åªå°è¯•ç§»åŠ¨æœ‰æ•°å€¼çš„æ–¹å—
+                        Block block_2 = getBlock(block_1, direction);
+                        if (!block_1.equals(block_2)) {
+                            exchange(block_1, block_2);//äº¤æ¢å®Œæˆåä¸»å—å˜æˆblock_2
+                            anyblockMove = true;
+                        }
+
+                        Block temp = getBlock(block_2.x + 1, block_2.y);
+                        if (block_2.value == temp.value) {
+                            merge(block_2, temp, flag);
+                            anyblockMove = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (direction == 3) {
+            for (int j = 1; j < 5; j++) {
+                for (int j2 = 1; j2 < 5; j2++) {
+                    Block block_1 = getBlock(j, j2);
+                    if (block_1.value != 0) {//åªå°è¯•ç§»åŠ¨æœ‰æ•°å€¼çš„æ–¹å—
+                        Block block_2 = getBlock(block_1, direction);
+                        if (!block_1.equals(block_2)) {
+                            exchange(block_1, block_2);//äº¤æ¢å®Œæˆåä¸»å—å˜æˆblock_2
+                            anyblockMove = true;
+                        }
+
+                        Block temp = getBlock(block_2.x - 1, block_2.y);
+                        if (block_2.value == temp.value) {
+                            merge(block_2, temp, flag);
+                            anyblockMove = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
