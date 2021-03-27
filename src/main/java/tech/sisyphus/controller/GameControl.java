@@ -37,7 +37,7 @@ public class GameControl {
      */
     public boolean setBlock(boolean flag) {
         if (flag) {
-            List<Block> list = new ArrayList<Block>();
+            List<Block> list = new ArrayList<>();
             x = (int) (Math.random() * 4 + 1);
             y = (int) (Math.random() * 4 + 1);
             for (Block block : mainPanel.blocks) {

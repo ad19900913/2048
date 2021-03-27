@@ -17,7 +17,7 @@ public class Node {
 		this.key = key;
 		this.value = value;
 		this.parent = parent;
-		children = new ArrayList<Node>();
+		children = new ArrayList<>();
 	}
 	@Override
 	public String toString() {

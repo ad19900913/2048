@@ -11,7 +11,7 @@
     <url>https://github.com/ad19900913/2048</url>
 
     <properties>
-        <lombok.version>2.2.8.1</lombok.version>
+        <lombok.version>1.18.18</lombok.version>
     </properties>
 
     <licenses>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.18</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 

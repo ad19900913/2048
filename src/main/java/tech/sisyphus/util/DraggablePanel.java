@@ -15,17 +15,16 @@ import java.awt.event.*;
  */
 public class DraggablePanel extends JPanel implements MouseListener, ActionListener {
 
-	private Toolkit t = Toolkit.getDefaultToolkit();
-	//窗口正在自动显示或者隐藏时对于鼠标不能产生响应，否则会出现闪烁
-	private boolean isRolling;
-	//为了实现只能鼠标左键拖动窗口  加入下面属性
-	private boolean canmove = false;
-
+	private final Toolkit t = Toolkit.getDefaultToolkit();
 	//定义按钮组件
 	protected JButton start;
 	protected JButton setup;
 	protected JButton about;
 	protected JButton exit;
+	//窗口正在自动显示或者隐藏时对于鼠标不能产生响应，否则会出现闪烁
+	private boolean isRolling;
+	//为了实现只能鼠标左键拖动窗口  加入下面属性
+	private boolean canmove = false;
 	private JFrame f;
 	private int screenX = t.getScreenSize().width;
 	private int screenY = t.getScreenSize().height;
@@ -41,7 +40,7 @@ public class DraggablePanel extends JPanel implements MouseListener, ActionListe
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.drawImage(CommonUtil.getImage("images\\login.jpg"), 0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT, this);
+		g.drawImage(CommonUtil.getImage("images/login.jpg"), 0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT, this);
 		start.updateUI();
 		setup.updateUI();
 		about.updateUI();
@@ -75,8 +74,8 @@ public class DraggablePanel extends JPanel implements MouseListener, ActionListe
 						}
 					}
 					//向右隐藏
-					else if(direction==3){
-						while (frameX < screenX-Config.SHOW_PIXELS) {
+					else if (direction == 3) {
+						while (frameX < screenX - Config.SHOW_PIXELS) {
 							frameX += Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
 							try {
@@ -87,8 +86,8 @@ public class DraggablePanel extends JPanel implements MouseListener, ActionListe
 						}
 					}
 					//向上隐藏
-					else if(direction==2){
-						while (frameY > Config.SHOW_PIXELS-Config.GAME_HEIGHT) {
+					else if (direction == 2) {
+						while (frameY > Config.SHOW_PIXELS - Config.GAME_HEIGHT) {
 							frameY -= Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
 							try {
@@ -100,9 +99,9 @@ public class DraggablePanel extends JPanel implements MouseListener, ActionListe
 					}
 				}
 				//弹出
-				else{
+				else {
 					//从左向右弹出
-					if (direction==1) {
+					if (direction == 1) {
 						while (frameX < -Config.SHOW_PIXELS) {
 							frameX += Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
@@ -126,7 +125,7 @@ public class DraggablePanel extends JPanel implements MouseListener, ActionListe
 						}
 					}
 					//从上向下弹出
-					else if(direction==2){
+					else if (direction == 2) {
 						while (frameY < -Config.SHOW_PIXELS) {
 							frameY += Config.SHOW_PIXELS;
 							f.setLocation(frameX, frameY);
@@ -144,8 +143,8 @@ public class DraggablePanel extends JPanel implements MouseListener, ActionListe
 		t.start();
 	}
 
-	public void init(){
-		f=new JFrame();
+	public void init() {
+		f = new JFrame();
 		f.setSize(Config.GAME_WIDTH, Config.GAME_HEIGHT);
 		f.setLocationRelativeTo(null);
 		//实现窗口自动隐藏
@@ -208,38 +207,23 @@ public class DraggablePanel extends JPanel implements MouseListener, ActionListe
 					//边界判断
 					if (targetX < 0) {
 						//左上角
-						if (targetY < 0) {
-							f.setLocation(0, 0);
-						}
 						//左侧   下面以此类推
-						else {
-							f.setLocation(0, targetY);
-						}
-					} else if (targetX > screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS) {
-						if (targetY < 0){
-							f.setLocation(screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS, 0);
-						} else {
-							f.setLocation(screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS, targetY);
-						}
-
-					} else if (targetY < 0) {
-						f.setLocation(targetX, 0);
-					}
-					//三个边界都不在的时候才可以自由拖动
-					else {
-						f.setLocation(targetX, targetY);
+						f.setLocation(0, Math.max(targetY, 0));
+					} else //三个边界都不在的时候才可以自由拖动
+					{
+						f.setLocation(Math.min(targetX, screenX - Config.GAME_WIDTH + Config.SHOW_PIXELS), Math.max(targetY, 0));
 					}
 				}
 			}
 		});
 		//初始化按钮 设定按钮位置
-		start = new JButton(CommonUtil.getIcon("images\\start.png"));
+		start = new JButton(CommonUtil.getIcon("images/start.png"));
 		start.setSize(Config.MENU_WIDTH, Config.MENU_HEIGHT);
-		setup = new JButton(CommonUtil.getIcon("images\\setup.png"));
+		setup = new JButton(CommonUtil.getIcon("images/setup.png"));
 		setup.setSize(Config.MENU_WIDTH, Config.MENU_HEIGHT);
-		about = new JButton(CommonUtil.getIcon("images\\about.png"));
+		about = new JButton(CommonUtil.getIcon("images/about.png"));
 		about.setSize(Config.MENU_WIDTH, Config.MENU_HEIGHT);
-		exit = new JButton(CommonUtil.getIcon("images\\exit.png"));
+		exit = new JButton(CommonUtil.getIcon("images/exit.png"));
 		exit.setSize(Config.MENU_WIDTH, Config.MENU_HEIGHT);
 		//添加按钮
 		setLayout(null);
@@ -266,51 +250,54 @@ public class DraggablePanel extends JPanel implements MouseListener, ActionListe
 		f.setAlwaysOnTop(Config.ALWAYS_ON_TOP);
 		f.setVisible(true);
 	}
+
 	@Override
-	public void actionPerformed(ActionEvent e) {}
+	public void actionPerformed(ActionEvent e) {
+	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (e.getSource().equals(start)) {
-			start.setIcon(CommonUtil.getIcon("images\\start_select.jpg"));
+			start.setIcon(CommonUtil.getIcon("images/start_select.jpg"));
 		}
 		if (e.getSource().equals(setup)) {
-			setup.setIcon(CommonUtil.getIcon("images\\setup_select.jpg"));
+			setup.setIcon(CommonUtil.getIcon("images/setup_select.jpg"));
 		}
 		if (e.getSource().equals(about)) {
-			about.setIcon(CommonUtil.getIcon("images\\about_select.jpg"));
+			about.setIcon(CommonUtil.getIcon("images/about_select.jpg"));
 		}
 		if (e.getSource().equals(exit)) {
-			exit.setIcon(CommonUtil.getIcon("images\\exit_select.jpg"));
+			exit.setIcon(CommonUtil.getIcon("images/exit_select.jpg"));
 		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		if (e.getSource().equals(start)) {
-			start.setIcon(CommonUtil.getIcon("images\\start.png"));
+			start.setIcon(CommonUtil.getIcon("images/start.png"));
 		}
 		if (e.getSource().equals(setup)) {
-			setup.setIcon(CommonUtil.getIcon("images\\setup.png"));
+			setup.setIcon(CommonUtil.getIcon("images/setup.png"));
 		}
 		if (e.getSource().equals(about)) {
-			about.setIcon(CommonUtil.getIcon("images\\about.png"));
+			about.setIcon(CommonUtil.getIcon("images/about.png"));
 		}
 		if (e.getSource().equals(exit)) {
-			exit.setIcon(CommonUtil.getIcon("images\\exit.png"));
+			exit.setIcon(CommonUtil.getIcon("images/exit.png"));
 		}
-	}	
+	}
 }

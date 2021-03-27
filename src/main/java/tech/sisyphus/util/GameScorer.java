@@ -4,7 +4,6 @@ package tech.sisyphus.util;
 import tech.sisyphus.config.Config;
 import tech.sisyphus.model.Block;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,15 +12,6 @@ import java.util.List;
  * @author user
  */
 public class GameScorer {
-
-    public static void main(String[] args) {
-        int[][] arr = new int[][]{{2, 0, 0, 0},
-                {2, 2, 4, 8},
-                {4, 0, 0, 0},
-                {8, 0, 0, 0}};
-        List<Block> blocks = (ArrayList<Block>) CommonUtil.arr2list(arr);
-        new GameScorer().getmonotonicity(blocks);
-    }
 
     //单调性
     private double getmonotonicity(List<Block> blocks) {

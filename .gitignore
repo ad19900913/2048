@@ -1,2 +1,4 @@
 /bin/
 .idea/
+target/
+2048.iml

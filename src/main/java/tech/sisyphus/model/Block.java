@@ -108,8 +108,7 @@ public class Block implements Cloneable {
 
     @Override
     public String toString() {
-        String string = "X:" + x + "\t" + "Y:" + y + "Value:" + value;
-        return string;
+        return "X:" + x + "\t" + "Y:" + y + "Value:" + value;
     }
 
     @Override

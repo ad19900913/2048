@@ -21,29 +21,29 @@ import java.util.Date;
  * 简单的2048游戏
  */
 public class MainPanel extends DraggablePanel implements KeyListener {
-    boolean gameover, success;//标志游戏是否开始
-    public ArrayList<Block> blocks = new ArrayList<Block>();
-    private Robot robot = new Robot(this);//模拟自动运行
-    public GameControl control = new GameControl(this);
+	boolean gameover, success;//标志游戏是否开始
+	private final Robot robot = new Robot(this);//模拟自动运行
+	public ArrayList<Block> blocks = new ArrayList<>();
+	public GameControl control = new GameControl(this);
 
-    Date startDate;
-    private StatusBar sf;
+	Date startDate;
+	private StatusBar sf;
 
-    public MainPanel() {
-        addKeyListener(this);
-    }
+	public MainPanel() {
+		addKeyListener(this);
+	}
 
-    //游戏初始化工作在这里
-    public void game_init() {
-        gameover = false;
-        success = false;
-        startDate = new Date();
+	//游戏初始化工作在这里
+	public void gameInit() {
+		gameover = false;
+		success = false;
+		startDate = new Date();
 
-        if (sf == null) {
-            sf = new StatusBar(this);
-            new Thread(sf.statsPanel).start();
-        }
-		init_block();
+		if (sf == null) {
+			sf = new StatusBar(this);
+			new Thread(sf.statusPanel).start();
+		}
+		initBlock();
 		removeAll();
 		if (Config.AUTORUN && !robot.isAlive()) {
 			//自动运行
@@ -54,9 +54,9 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 	/**
 	 * 初始化格局，可以是全新格局，也可以自定义格局，便于调试
 	 */
-	private void init_block() {
+	private void initBlock() {
 		if (Config.CASE_NEW) {
-			blocks = new ArrayList<Block>();
+			blocks = new ArrayList<>();
 			//初始化16个空白方块,初始化一个带数值的方块
 			for (int i = 1; i < 5; i++) {
 				for (int j = 1; j < 5; j++) {
@@ -77,7 +77,7 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 	}
 
 	//判断游戏当前状态  是正在游戏  还是游戏失败  或者成功
-	public void judge_game_state() {
+	public void judgeGameState() {
 		for (Block block : blocks) {
 			if (block.value == 2048) {
 				success = true;
@@ -94,8 +94,8 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 		g.fillRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT);
 		//judge_game_state();
 		//画出每个方块
-		for (int i = 0; i < blocks.size(); i++) {
-			blocks.get(i).draw(g);
+		for (Block block : blocks) {
+			block.draw(g);
 		}
 
 		if (gameover) {
@@ -103,8 +103,8 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 			g.setFont(new Font("宋体", Font.BOLD, 40));
 			g.drawString("GAME OVER", 200, 200);
 		}
-		
-		if(success) {
+
+		if (success) {
 			g.setColor(Color.black);
 			g.setFont(new Font("宋体", Font.BOLD, 40));
 			g.drawString("YOU WIN", 200, 200);
@@ -113,8 +113,8 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(start)){
-			game_init();
+		if(e.getSource().equals(start)) {
+			gameInit();
 			repaint();
 		}
 		if(e.getSource().equals(setup)){
@@ -130,7 +130,7 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 			);
 			jta.setSize(150, 250);
 			jta.setEditable(false);
-			JOptionPane.showConfirmDialog(this, jta, "关于", JOptionPane.CLOSED_OPTION, 2);
+			JOptionPane.showConfirmDialog(this, jta, "关于", JOptionPane.DEFAULT_OPTION, 2);
 		}
 		if(e.getSource().equals(exit)){
 			System.exit(0);
@@ -139,28 +139,24 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if(e.getKeyChar()=='w'){
+		if (e.getKeyCode() == KeyEvent.VK_W) {
 			next(1);
 		}
-		if(e.getKeyChar()=='s'){
+		if (e.getKeyCode() == KeyEvent.VK_S) {
 			next(2);
 		}
-		if(e.getKeyChar()=='a'){
+		if (e.getKeyCode() == KeyEvent.VK_A) {
 			next(3);
 		}
-		if(e.getKeyChar()=='d'){
+		if (e.getKeyCode() == KeyEvent.VK_D) {
 			next(4);
 		}
-		if(e.getKeyChar() == 'f') {
+		if (e.getKeyCode() == KeyEvent.VK_F) {
 			//实现弹出统计窗口
-			if (sf.isVisible()) {
-				sf.setVisible(false);
-			} else {
-				sf.setVisible(true);
-			}
+			sf.setVisible(!sf.isVisible());
 		}
-		if(e.getKeyChar()=='r'){
-			game_init();
+		if (e.getKeyCode() == KeyEvent.VK_R) {
+			gameInit();
 			try {
 				Recorder.init();
 			} catch (IOException e1) {
@@ -168,7 +164,7 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 			}
 			repaint();
 		}
-		if (e.getKeyChar() == 'q') {
+		if (e.getKeyCode() == KeyEvent.VK_Q) {
 			System.exit(0);
 		}
 

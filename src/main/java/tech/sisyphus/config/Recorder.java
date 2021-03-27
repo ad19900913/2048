@@ -1,7 +1,5 @@
 package tech.sisyphus.config;
 
-import tech.sisyphus.util.FileUtil;
-
 import java.io.IOException;
 
 public class Recorder {
@@ -75,8 +73,6 @@ public class Recorder {
         S_PLAY_TIMES = 0;
         S_MAX_NUM = 0;
         if (T_RUN_NUM >= T_MAX_RUN_NUM) {
-            double percent = (double) ((double) T_SUCCESS_NUM / (double) T_MAX_RUN_NUM);
-            FileUtil.append("MONOTONICITY:" + Config.MONOTONICITY + "\tSMOOTHNESS:" + Config.SMOOTHNESS + "\tFREETILES:" + Config.FREETILES + "\tMAX_NUM:" + T_MAX_NUM + "\tMIN_SCORES:" + T_MIN_SCORES + "\tMAX_SCORES:" + T_MAX_SCORES + "\tAVERAGE_SCORES:" + T_AVERAGE_SCORES + "\tSUCCESS:" + percent);
             T_MAX_NUM = 0;
             T_RUN_NUM = 0;
             T_MIN_SCORES = 0;

@@ -10,19 +10,19 @@ import java.util.Date;
 public class StatusBar extends JFrame {
 
     MainPanel p2;
-    StatsPanel statsPanel;
+    StatusPanel statusPanel;
 
-    public StatusBar(MainPanel panel_2048) {
-        p2 = panel_2048;
+    public StatusBar(MainPanel mainPanel) {
+        p2 = mainPanel;
         setSize(Config.GAME_WIDTH, Config.GAME_HEIGHT / 10);
         setLocationRelativeTo(p2);
         setUndecorated(true);
-        statsPanel = new StatsPanel();
-        add(statsPanel);
+        statusPanel = new StatusPanel();
+        add(statusPanel);
         setVisible(true);
     }
 
-    class StatsPanel extends JPanel implements Runnable {
+    class StatusPanel extends JPanel implements Runnable {
 
         @Override
         protected void paintComponent(Graphics g) {
@@ -44,9 +44,8 @@ public class StatusBar extends JFrame {
                 // TODO Auto-generated method stub
                 try {
                     Date date = new Date();
-                    int play_time = (int) ((date.getTime() - p2.startDate
+                    Recorder.S_PLAY_TIMES = (int) ((date.getTime() - p2.startDate
                             .getTime()) / 1000);
-                    Recorder.S_PLAY_TIMES = play_time;
                     if (StatusBar.this.isVisible()) {
                         StatusBar.this.setLocation(p2.getLocationOnScreen().x,
                                 p2.getLocationOnScreen().y - Config.GAME_HEIGHT / 10);
