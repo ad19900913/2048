@@ -2,14 +2,10 @@ package tech.sisyphus.util;
 
 import tech.sisyphus.model.Block;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommonUtil {
-
-    private static final Toolkit DEFAULT_TOOLKIT = Toolkit.getDefaultToolkit();
 
     public static Block[][] list2arr(List<Block> blocks) {
         Block[][] arr = new Block[4][4];
@@ -43,11 +39,4 @@ public class CommonUtil {
         return temp;
     }
 
-    public static Image getImage(String path) {
-        return DEFAULT_TOOLKIT.getImage(CommonUtil.class.getClassLoader().getResource(path));
-    }
-
-    public static Icon getIcon(String path) {
-        return new ImageIcon(CommonUtil.class.getClassLoader().getResource(path));
-    }
 }

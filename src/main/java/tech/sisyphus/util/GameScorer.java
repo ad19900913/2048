@@ -20,11 +20,11 @@ public class GameScorer {
         double temp = 1;
         double all = 64;
         //横向计算
-        for (int i = 0; i < arr.length; i++) {
+        for (Block[] value : arr) {
             for (int j = 0; j < arr.length - 1; j++) {
-                Block block1 = arr[i][j];
-                Block block2 = arr[i][j + 1];
-                double d = 0;
+                Block block1 = value[j];
+                Block block2 = value[j + 1];
+                double d;
                 if (block1.value == 0 || block2.value == 0) {
                     d = 1;
                 } else {
@@ -40,7 +40,7 @@ public class GameScorer {
             for (int j = 0; j < arr.length; j++) {
                 Block block1 = arr[i][j];
                 Block block2 = arr[i + 1][j];
-                double d = 0;
+                double d;
                 if (block1.value == 0 || block2.value == 0) {
                     d = 1;
                 } else {
@@ -60,11 +60,11 @@ public class GameScorer {
         double count = 0;
         double all = 24;
         //横向计算
-        for (int i = 0; i < arr.length; i++) {
+        for (Block[] value : arr) {
             for (int j = 0; j < arr.length - 1; j++) {
-                Block block1 = arr[i][j];
-                Block block2 = arr[i][j + 1];
-                double min = (double) Math.min(block1.value, block2.value);
+                Block block1 = value[j];
+                Block block2 = value[j + 1];
+                double min = Math.min(block1.value, block2.value);
                 double max = (double) Math.max(block1.value, block2.value) == 0 ? 1 : (double) Math.max(block1.value, block2.value);
                 double d = min / max;
                 count += d;
@@ -75,7 +75,7 @@ public class GameScorer {
             for (int j = 0; j < arr.length; j++) {
                 Block block1 = arr[i][j];
                 Block block2 = arr[i + 1][j];
-                double min = (double) Math.min(block1.value, block2.value);
+                double min = Math.min(block1.value, block2.value);
                 double max = (double) Math.max(block1.value, block2.value) == 0 ? 1 : (double) Math.max(block1.value, block2.value);
                 double d = min / max;
                 count += d;
@@ -88,13 +88,12 @@ public class GameScorer {
     private double getfreetiles(List<Block> blocks) {
         double count = 0;
         double all = 16;
-        for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i).value == 0) {
+        for (Block block : blocks) {
+            if (block.value == 0) {
                 count++;
             }
         }
-        double d = (count / all) * Config.FREETILES;
-        return d;
+        return (count / all) * Config.FREETILES;
     }
 
     public double getScore(List<Block> blocks) {

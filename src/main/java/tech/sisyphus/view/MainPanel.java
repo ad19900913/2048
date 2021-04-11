@@ -1,7 +1,7 @@
 package tech.sisyphus.view;
 
-import tech.sisyphus.config.Config;
 import tech.sisyphus.config.Recorder;
+import tech.sisyphus.config.YamlConfig;
 import tech.sisyphus.controller.GameControl;
 import tech.sisyphus.controller.Robot;
 import tech.sisyphus.model.Block;
@@ -21,51 +21,52 @@ import java.util.Date;
  * 简单的2048游戏
  */
 public class MainPanel extends DraggablePanel implements KeyListener {
-	boolean gameover, success;//标志游戏是否开始
-	private final Robot robot = new Robot(this);//模拟自动运行
-	public ArrayList<Block> blocks = new ArrayList<>();
-	public GameControl control = new GameControl(this);
+    boolean gameover, success;//标志游戏是否开始
+    private final Robot robot = new Robot(this);//模拟自动运行
+    public ArrayList<Block> blocks = new ArrayList<>();
+    public GameControl control = new GameControl(this);
 
-	Date startDate;
-	private StatusBar sf;
+    Date startDate;
+    private StatusBar sf;
 
-	public MainPanel() {
-		addKeyListener(this);
-	}
+    public MainPanel(YamlConfig config) {
+        super(config);
+        addKeyListener(this);
+    }
 
-	//游戏初始化工作在这里
-	public void gameInit() {
-		gameover = false;
-		success = false;
-		startDate = new Date();
+    //游戏初始化工作在这里
+    public void gameInit() {
+        gameover = false;
+        success = false;
+        startDate = new Date();
 
-		if (sf == null) {
-			sf = new StatusBar(this);
-			new Thread(sf.statusPanel).start();
-		}
-		initBlock();
-		removeAll();
-		if (Config.AUTORUN && !robot.isAlive()) {
-			//自动运行
-			robot.start();
-		}
-	}
+        if (sf == null) {
+            sf = new StatusBar(this);
+            new Thread(sf.statusPanel).start();
+        }
+        initBlock();
+        removeAll();
+        if (config.isAutorun() && !robot.isAlive()) {
+            //自动运行
+            robot.start();
+        }
+    }
 
 	/**
 	 * 初始化格局，可以是全新格局，也可以自定义格局，便于调试
 	 */
 	private void initBlock() {
-		if (Config.CASE_NEW) {
-			blocks = new ArrayList<>();
-			//初始化16个空白方块,初始化一个带数值的方块
-			for (int i = 1; i < 5; i++) {
-				for (int j = 1; j < 5; j++) {
-					Block block = new Block(i, j);
-					if (i == 2 && j == 2) {
-						block.value = 2;
-					}
-					blocks.add(block);
-				}
+        if (config.isCaseNew()) {
+            blocks = new ArrayList<>();
+            //初始化16个空白方块,初始化一个带数值的方块
+            for (int i = 1; i < 5; i++) {
+                for (int j = 1; j < 5; j++) {
+                    Block block = new Block(i, j);
+                    if (i == 2 && j == 2) {
+                        block.value = 2;
+                    }
+                    blocks.add(block);
+                }
 			}
 		} else {
 			int[][] arr = new int[][]{{2, 0, 0, 0},
@@ -88,20 +89,20 @@ public class MainPanel extends DraggablePanel implements KeyListener {
 
 	@Override
 	public void paint(Graphics g) {
-		super.paint(g);
+        super.paint(g);
 
-		g.setColor(new Color(0, 0, 0));
-		g.fillRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT);
-		//judge_game_state();
-		//画出每个方块
-		for (Block block : blocks) {
-			block.draw(g);
-		}
+        g.setColor(new Color(0, 0, 0));
+        g.fillRect(0, 0, config.getGameWidth(), config.getGameHeight());
+        //judge_game_state();
+        //画出每个方块
+        for (Block block : blocks) {
+            block.draw(g);
+        }
 
-		if (gameover) {
-			g.setColor(Color.black);
-			g.setFont(new Font("宋体", Font.BOLD, 40));
-			g.drawString("GAME OVER", 200, 200);
+        if (gameover) {
+            g.setColor(Color.black);
+            g.setFont(new Font("宋体", Font.BOLD, 40));
+            g.drawString("GAME OVER", 200, 200);
 		}
 
 		if (success) {

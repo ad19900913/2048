@@ -1,0 +1,6 @@
+app
+width: 512
+height: 512
+  bot
+enabled: false
+deep: 8

@@ -1,6 +1,5 @@
 package tech.sisyphus.view;
 
-import tech.sisyphus.config.Config;
 import tech.sisyphus.config.Recorder;
 
 import javax.swing.*;
@@ -14,7 +13,7 @@ public class StatusBar extends JFrame {
 
     public StatusBar(MainPanel mainPanel) {
         p2 = mainPanel;
-        setSize(Config.GAME_WIDTH, Config.GAME_HEIGHT / 10);
+        setSize(mainPanel.getWidth(), mainPanel.getHeight() / 10);
         setLocationRelativeTo(p2);
         setUndecorated(true);
         statusPanel = new StatusPanel();
@@ -26,11 +25,10 @@ public class StatusBar extends JFrame {
 
         @Override
         protected void paintComponent(Graphics g) {
-            // TODO Auto-generated method stub
             super.paintComponent(g);
 
             g.setColor(new Color(187, 173, 160));
-            g.fillRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT / 10);
+            g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
             g.setColor(Color.black);
             g.setFont(new Font("宋体", Font.BOLD, 20));
@@ -41,21 +39,19 @@ public class StatusBar extends JFrame {
         @Override
         public void run() {
             while (true) {
-                // TODO Auto-generated method stub
                 try {
                     Date date = new Date();
                     Recorder.S_PLAY_TIMES = (int) ((date.getTime() - p2.startDate
                             .getTime()) / 1000);
                     if (StatusBar.this.isVisible()) {
                         StatusBar.this.setLocation(p2.getLocationOnScreen().x,
-                                p2.getLocationOnScreen().y - Config.GAME_HEIGHT / 10);
+                                p2.getLocationOnScreen().y - this.getHeight());
                         repaint();
 
                         p2.requestFocusInWindow();
                     }
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
