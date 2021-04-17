@@ -1,7 +1,7 @@
 package tech.sisyphus.controller;
 
-import tech.sisyphus.config.Config;
 import tech.sisyphus.config.Recorder;
+import tech.sisyphus.config.YamlConfig;
 import tech.sisyphus.model.Block;
 import tech.sisyphus.util.CommonUtil;
 import tech.sisyphus.util.GameScorer;
@@ -19,12 +19,13 @@ public class Robot extends Thread {
     private ArrayList<Block> original = new ArrayList<Block>();
     private Node max;
     private double value;
+    private final YamlConfig config = YamlConfig.getInstance();
 
     @Override
     public void run() {
         while (true) {
             try {
-                sleep(Config.AUTORUN_SLEEP_TIME);
+                sleep(config.getAutorunSleepTime());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -69,7 +70,7 @@ public class Robot extends Thread {
     private void generateTree(Node parent, int deep, ArrayList<Block> blocks) {
         //搜索深度+1
         deep++;
-        if (deep <= Config.DEEP) {
+        if (deep <= config.getBot().getDeep()) {
             panel.blocks = (ArrayList<Block>) CommonUtil.getCloneList(blocks);
             for (int i = 1; i < 5; i++) {
                 panel.control.move(i, false);

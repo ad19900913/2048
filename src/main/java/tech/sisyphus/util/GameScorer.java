@@ -1,7 +1,7 @@
 package tech.sisyphus.util;
 
 
-import tech.sisyphus.config.Config;
+import tech.sisyphus.config.YamlConfig;
 import tech.sisyphus.model.Block;
 
 import java.util.List;
@@ -12,6 +12,8 @@ import java.util.List;
  * @author user
  */
 public class GameScorer {
+
+    private final YamlConfig config = YamlConfig.getInstance();
 
     //单调性
     private double getmonotonicity(List<Block> blocks) {
@@ -51,7 +53,7 @@ public class GameScorer {
             count += temp;
             temp = 1;
         }
-        return (count / all) * Config.MONOTONICITY;
+        return (count / all) * config.getMonotonicity();
     }
 
     //平滑性
@@ -81,7 +83,7 @@ public class GameScorer {
                 count += d;
             }
         }
-        return (count / all) * Config.SMOOTHNESS;
+        return (count / all) * config.getSmoothness();
     }
 
     //空闲性
@@ -93,7 +95,7 @@ public class GameScorer {
                 count++;
             }
         }
-        return (count / all) * Config.FREETILES;
+        return (count / all) * config.getFreetiles();
     }
 
     public double getScore(List<Block> blocks) {

@@ -3,6 +3,7 @@ package tech.sisyphus.config;
 import java.io.IOException;
 
 public class Recorder {
+    private final static YamlConfig CONFIG = YamlConfig.getInstance();
     /**
      * 单局游戏-有效移动次数
      */
@@ -80,7 +81,7 @@ public class Recorder {
             T_SCORES = 0;
             T_AVERAGE_SCORES = 0;
             T_SUCCESS_NUM = 0;
-            Config.improveArgs();
+            CONFIG.improveArgs();
         }
     }
 }

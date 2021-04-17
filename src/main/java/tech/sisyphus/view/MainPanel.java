@@ -46,10 +46,10 @@ public class MainPanel extends DraggablePanel implements KeyListener {
         }
         initBlock();
         removeAll();
-        if (config.isAutorun() && !robot.isAlive()) {
-            //自动运行
-            robot.start();
-        }
+        if (config.getBot().isEnabled() && !robot.isAlive()) {
+			//自动运行
+			robot.start();
+		}
     }
 
 	/**

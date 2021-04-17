@@ -1,10 +1,12 @@
 package tech.sisyphus.model;
 
-import tech.sisyphus.config.Config;
+import tech.sisyphus.config.YamlConfig;
 
 import java.awt.*;
 
 public class Block implements Cloneable {
+
+    private final YamlConfig config = YamlConfig.getInstance();
     // 纵横坐标采用(1,1)(2,2)(3.3)(4.4)的形式
     public int x;
     public int y;
@@ -21,8 +23,8 @@ public class Block implements Cloneable {
     // 方块之间的间隔
     private int gap = 10;
     // 方块的大小
-    private int width = (Config.GAME_WIDTH - 5 * gap) / 4;
-    private int height = (Config.GAME_HEIGHT - 5 * gap) / 4;
+    private int width = (config.getGameWidth() - 5 * gap) / 4;
+    private int height = (config.getGameHeight() - 5 * gap) / 4;
 
     public Block(int x, int y, int value) {
         super();
@@ -40,10 +42,7 @@ public class Block implements Cloneable {
     @Override
     public boolean equals(Object obj) {
         Block temp = (Block) obj;
-        if (x == temp.x && y == temp.y) {
-            return true;
-        }
-        return false;
+        return x == temp.x && y == temp.y;
     }
 
     public Color getColor(int value) {

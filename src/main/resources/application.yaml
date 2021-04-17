@@ -1,6 +1,15 @@
-app
-width: 512
-height: 512
-  bot
-enabled: false
-deep: 8
+gameWidth: 512
+gameHeight: 512
+showPixels: 5
+sleepTime: 5
+caseNew: true
+alwaysOnTop: false
+monotonicity: 60
+smoothness: 0
+freetiles: 40
+total: 100
+gap: 5
+bot:
+  enabled: false
+  deep: 8
+  sleepTime: 1
