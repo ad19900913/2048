@@ -1,0 +1,14 @@
+on:
+  schedule:
+  - cron: "*/5 * * * *"
+jobs:
+  test:
+    name: Test on ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print a greeting
+      env:
+        NAME: JYC
+      run: |
+        echo Hello World, This is $NAME's test action.
+        curl 'https://api.day.app/i89aVvkCfaLADt3kSfY32X/Hello World, This is $NAME's test action'
